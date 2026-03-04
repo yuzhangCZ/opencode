@@ -109,6 +109,13 @@ OpenCode 内置两种 Agent，可用 `Tab` 键快速切换：
 
 更多配置说明请查看我们的 [**官方文档**](https://opencode.ai/docs)。
 
+仓库内分层架构文档请查看：
+
+- [架构文档索引](./docs/architecture/index.md)
+- [REST 接口参考](./docs/api/01-rest-reference.md)
+- [SSE 事件参考](./docs/api/02-sse-reference.md)
+- [插件事件订阅问题分析报告](./docs/architecture/04-plugin-client-event-analysis.md)
+
 ### 参与贡献
 
 如有兴趣贡献代码，请在提交 PR 前阅读 [贡献指南 (Contributing Docs)](./CONTRIBUTING.md)。
