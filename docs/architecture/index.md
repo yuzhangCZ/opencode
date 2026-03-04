@@ -30,5 +30,5 @@
 
 - Server 架构：`docs/opencode-server-architecture.md`
 - Server API：`docs/opencode-server-api-docs.md`
-- SSE 实现：`docs/sse-implementation.md`
+- SSE 实现：`docs/api/02-sse-reference.md`（分类目录：`docs/api/sse/00-event-catalog.md`）
 - 代码实现：`packages/opencode/src/server/**`

@@ -30,7 +30,7 @@ This task defines a repeatable architecture exploration workflow for OpenCode, w
    - 输出“模块 -> 入口 -> 核心职责 -> 证据”。
 3. 接口面探索（External Surface）
    - 按 `docs/opencode-server-api-docs.md` 端点边界生成 REST 参考。
-   - 按 `docs/sse-implementation.md` 生成 SSE 参考。
+   - 按 `docs/api/02-sse-reference.md` 与 `docs/api/sse/00-event-catalog.md` 生成 SSE 参考。
 4. 实现证据归档（Implementation Anchors）
    - 每条结论对应源码路径 + 函数/路由名。
 5. 差距审计（Gap Audit）
