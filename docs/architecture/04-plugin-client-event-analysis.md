@@ -1,4 +1,4 @@
-# 插件 `client.event.subscribe` 事件缺失问题分析报告 / Plugin Event Subscription Analysis
+# 插件 `client.event.subscribe` 事件缺失问题分析报告（`packages/opencode` 运行时专题）/ Plugin Event Subscription Analysis (`packages/opencode` Runtime Incident)
 
 ## 1. 背景与问题定义 / Background
 

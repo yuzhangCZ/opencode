@@ -1,4 +1,6 @@
-# OpenCode 总览 / OpenCode Overview
+# OpenCode 总览（`packages/opencode` 专项）/ OpenCode Overview (`packages/opencode` Focus)
+
+> 本文档聚焦 `packages/opencode` 包架构，原有历史梳理内容保留，并增补跨 package 导航。
 
 ## 系统边界 / System Boundaries
 
@@ -59,6 +61,47 @@ flowchart LR
   E --> C
 ```
 
+## Packages 全景 / Packages Panorama
+
+```mermaid
+flowchart LR
+  subgraph Runtime
+    A["opencode"]
+    B["sdk"]
+    C["plugin"]
+    D["app"]
+    E["desktop"]
+    F["enterprise"]
+    G["function"]
+  end
+  subgraph Support
+    H["ui"]
+    I["util"]
+    J["script"]
+    K["slack"]
+    L["web"]
+    M["docs"]
+    N["containers"]
+    O["console"]
+    P["extensions"]
+    Q["identity"]
+  end
+  D --> H
+  E --> D
+  F --> H
+  A --> B
+  A --> C
+  A --> I
+  K --> B
+  L --> A
+```
+
+分组说明 / Grouping:
+
+1. 核心链路：`opencode/app/desktop/enterprise/function/sdk/plugin`
+2. 支撑链路：`ui/util/slack/script/containers/console/web/docs/extensions/identity`
+3. 分包详解见：[`../packages/index.md`](../packages/index.md)
+
 ## 阅读顺序 / Suggested Reading Order
 
 1. [`00-exploration-task.md`](./00-exploration-task.md)
@@ -67,3 +110,4 @@ flowchart LR
 4. [`../api/01-rest-reference.md`](../api/01-rest-reference.md)
 5. [`../api/02-sse-reference.md`](../api/02-sse-reference.md)
 6. [`glossary.md`](./glossary.md)
+7. [`../packages/index.md`](../packages/index.md)

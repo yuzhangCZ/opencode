@@ -1,4 +1,6 @@
-# 系统设计 / System Design
+# 系统设计（`packages/opencode` 专项）/ System Design (`packages/opencode` Focus)
+
+> 本文档描述 `packages/opencode` 运行时的宏观设计；其余 package 详见 `docs/packages` 分组目录。
 
 ## 1. 模块关系 / Module Relationships
 
@@ -103,3 +105,37 @@ flowchart TD
 - 实现细节见 [`03-implementation-map.md`](./03-implementation-map.md)
 - REST 接口见 [`../api/01-rest-reference.md`](../api/01-rest-reference.md)
 - SSE 接口见 [`../api/02-sse-reference.md`](../api/02-sse-reference.md)
+- 分包架构见 [`../packages/index.md`](../packages/index.md)
+
+## 7. 跨 Package 依赖视图 / Cross-Package Dependency View
+
+```mermaid
+flowchart TD
+  OP["packages/opencode"] --> SDK["packages/sdk/js"]
+  OP --> PL["packages/plugin"]
+  OP --> UT["packages/util"]
+  APP["packages/app"] --> UI["packages/ui"]
+  APP --> SDK
+  APP --> UT
+  DESK["packages/desktop"] --> APP
+  DESK --> UI
+  ENT["packages/enterprise"] --> UI
+  ENT --> UT
+  SL["packages/slack"] --> SDK
+```
+
+证据 / Evidence:
+
+- `packages/opencode/package.json`
+- `packages/app/package.json`
+- `packages/desktop/package.json`
+- `packages/enterprise/package.json`
+- `packages/slack/package.json`
+
+## 8. 边界规则 / Boundary Rules
+
+1. `opencode` 负责 runtime orchestration，不直接承载纯 UI 组件实现。
+2. `ui` 只提供可复用展示与交互部件，不内嵌业务编排逻辑。
+3. `sdk` 作为接口契约层，不表达服务端业务策略。
+4. `plugin` 只定义扩展协议与类型，运行时装载在 `opencode` 完成。
+5. 非核心包（`containers/docs/identity/extensions`）以资产与发布支撑为主。

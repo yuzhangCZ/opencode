@@ -19,3 +19,8 @@
 | 问题请求 | Question Request | 需用户回答的问题项。 |
 | 路由组合根 | Route Composition Root | 聚合中间件与路由的主入口。 |
 | 上下文目录 | Directory Context | API 请求绑定的工作目录。 |
+| 分包索引 | Package Architecture Index | 按 package 阅读架构文档的入口页。 |
+| 运行时核心包 | Runtime Core Packages | 直接参与请求处理与会话执行的包集合。 |
+| 支撑包 | Supporting Packages | 提供 UI、工具、资产、构建与生态适配的包。 |
+| 契约层 | Contract Layer | 通过类型或 schema 定义交互边界的层（如 SDK/Plugin）。 |
+| 证据锚点 | Evidence Anchor | 用于追溯结论的源码路径与关键函数位置。 |

@@ -1,4 +1,6 @@
-# 实现地图 / Implementation Map
+# 实现地图（`packages/opencode` 专项）/ Implementation Map (`packages/opencode` Focus)
+
+> 本文档记录 `packages/opencode` 的实现锚点与调用链，历史内容保留；其它 package 的实现锚点见 `docs/packages/*`。
 
 ## 1. 入口实现 / Entry Implementation
 
@@ -115,3 +117,26 @@ Evidence:
 - 架构层：[`02-system-design.md`](./02-system-design.md)
 - REST 接口：[`../api/01-rest-reference.md`](../api/01-rest-reference.md)
 - SSE 接口：[`../api/02-sse-reference.md`](../api/02-sse-reference.md)
+- 分包索引：[`../packages/index.md`](../packages/index.md)
+
+## 7. Package 实现锚点汇总 / Package Anchor Summary
+
+| Package | Anchors |
+|---|---|
+| opencode | `packages/opencode/src/index.ts`, `packages/opencode/src/server/server.ts` |
+| app | `packages/app/src/index.ts`, `packages/app/src/entry.tsx`, `packages/app/src/app.tsx` |
+| desktop | `packages/desktop/src/index.tsx`, `packages/desktop/src/cli.ts`, `packages/desktop/src-tauri` |
+| enterprise | `packages/enterprise/src/entry-server.tsx`, `packages/enterprise/src/routes` |
+| function | `packages/function/src/api.ts` |
+| sdk | `packages/sdk/openapi.json`, `packages/sdk/js/src/index.ts`, `packages/sdk/js/src/v2/index.ts` |
+| plugin | `packages/plugin/src/index.ts`, `packages/plugin/src/tool.ts` |
+| ui | `packages/ui/src/components`, `packages/ui/src/theme` |
+| util | `packages/util/src/error.ts`, `packages/util/src/retry.ts` |
+| slack | `packages/slack/src/index.ts` |
+| web | `packages/web/astro.config.mjs`, `packages/web/src/middleware.ts` |
+| docs | `packages/docs/docs.json`, `packages/docs/index.mdx` |
+| containers | `packages/containers/README.md`, `packages/containers/base` |
+| console | `packages/console/app`, `packages/console/core` |
+| extensions | `packages/extensions/zed` |
+| identity | `packages/identity/mark.svg` |
+| script | `packages/script/src/index.ts` |

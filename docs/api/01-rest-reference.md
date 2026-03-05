@@ -41,6 +41,17 @@ curl -s http://localhost:4096/global/health
 {"healthy":true,"version":"1.x.x"}
 ```
 
+### GET /global/event
+- Summary: 订阅全局 SSE（按目录分发，详见 SSE 文档）。
+- cURL:
+```bash
+curl -N http://localhost:4096/global/event
+```
+- Response:
+```json
+{"directory":"global","payload":{"type":"server.connected","properties":{}}}
+```
+
 ### GET /global/config
 - Summary: 读取全局配置 (Read global config).
 - cURL:
@@ -104,6 +115,17 @@ curl -s -X POST http://localhost:4096/session -H 'content-type: application/json
 - Response:
 ```json
 {"id":"ses_xxx","title":"demo"}
+```
+
+### GET /session/status
+- Summary: 获取会话状态映射 (Get session status map).
+- cURL:
+```bash
+curl -s http://localhost:4096/session/status
+```
+- Response:
+```json
+{"ses_xxx":{"type":"idle"}}
 ```
 
 ### GET /session/{sessionID}
@@ -226,6 +248,17 @@ curl -s -X DELETE http://localhost:4096/session/ses_xxx/share
 - Response:
 ```json
 {"id":"ses_xxx","share":null}
+```
+
+### GET /session/{sessionID}/diff
+- Summary: 获取会话文件 diff (Get session file diff).
+- cURL:
+```bash
+curl -s 'http://localhost:4096/session/ses_xxx/diff?messageID=msg_1'
+```
+- Response:
+```json
+[{"file":"src/a.ts","additions":3,"deletions":1}]
 ```
 
 ### POST /session/{sessionID}/summarize
@@ -731,6 +764,21 @@ true
 
 ## 11. Permission API
 
+### POST /session/{sessionID}/permissions/{permissionID}
+- Summary: 回复权限请求（兼容路径，deprecated）。
+- cURL:
+```bash
+curl -s -X POST http://localhost:4096/session/ses_xxx/permissions/perm_1 -H 'content-type: application/json' -d '{"response":"once"}'
+```
+- Request:
+```json
+{"response":"once"}
+```
+- Response:
+```json
+true
+```
+
 ### POST /permission/{requestID}/reply
 - Summary: 回复权限请求。
 - cURL:
@@ -950,6 +998,58 @@ true
 - cURL:
 ```bash
 curl -s -X DELETE http://localhost:4096/auth/openai
+```
+- Response:
+```json
+true
+```
+
+### GET /provider
+- Summary: 列 provider（可用与已连接）。
+- cURL:
+```bash
+curl -s http://localhost:4096/provider
+```
+- Response:
+```json
+{"all":[{"id":"anthropic"}],"connected":[{"id":"openai"}],"default":{}}
+```
+
+### GET /provider/auth
+- Summary: 列 provider 认证方式。
+- cURL:
+```bash
+curl -s http://localhost:4096/provider/auth
+```
+- Response:
+```json
+{"openai":[{"type":"api","label":"API Key"}]}
+```
+
+### POST /provider/{providerID}/oauth/authorize
+- Summary: 发起 Provider OAuth 授权。
+- cURL:
+```bash
+curl -s -X POST http://localhost:4096/provider/openai/oauth/authorize -H 'content-type: application/json' -d '{"method":0}'
+```
+- Request:
+```json
+{"method":0}
+```
+- Response:
+```json
+{"method":"code","url":"https://...","instructions":"..."}
+```
+
+### POST /provider/{providerID}/oauth/callback
+- Summary: 提交 Provider OAuth 回调结果。
+- cURL:
+```bash
+curl -s -X POST http://localhost:4096/provider/openai/oauth/callback -H 'content-type: application/json' -d '{"method":0,"code":"abc"}'
+```
+- Request:
+```json
+{"method":0,"code":"abc"}
 ```
 - Response:
 ```json
