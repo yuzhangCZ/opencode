@@ -8,6 +8,8 @@ import { getDirectory, getFilename } from "@opencode-ai/util/path"
 
 const MAIN_WORKTREE = "main"
 const CREATE_WORKTREE = "create"
+const ROOT_CLASS =
+  "size-full flex flex-col justify-end items-start gap-4 flex-[1_0_0] self-stretch max-w-200 mx-auto 2xl:max-w-[1000px] px-6 pb-16"
 
 interface NewSessionViewProps {
   worktree: string
@@ -47,28 +49,28 @@ export function NewSessionView(props: NewSessionViewProps) {
   }
 
   return (
-    <div class="size-full flex flex-col justify-end items-start gap-4 flex-[1_0_0] self-stretch max-w-200 mx-auto 2xl:max-w-[1000px] px-6 pb-[calc(var(--prompt-height,11.25rem)+64px)]">
+    <div class={ROOT_CLASS}>
       <div class="text-20-medium text-text-weaker">{language.t("command.session.new")}</div>
-      <div class="flex justify-center items-center gap-3">
-        <Icon name="folder" size="small" />
-        <div class="text-12-medium text-text-weak select-text">
+      <div class="flex justify-center items-start gap-3 min-h-5">
+        <Icon name="folder" size="small" class="mt-0.5 shrink-0" />
+        <div class="text-12-medium text-text-weak select-text leading-5">
           {getDirectory(projectRoot())}
           <span class="text-text-strong">{getFilename(projectRoot())}</span>
         </div>
       </div>
-      <div class="flex justify-center items-center gap-1">
-        <Icon name="branch" size="small" />
-        <div class="text-12-medium text-text-weak select-text ml-2">{label(current())}</div>
+      <div class="flex justify-center items-start gap-3 min-h-5">
+        <Icon name="branch" size="small" class="mt-0.5 shrink-0" />
+        <div class="text-12-medium text-text-weak select-text leading-5">{label(current())}</div>
       </div>
       <Show when={sync.project}>
         {(project) => (
-          <div class="flex justify-center items-center gap-3">
-            <Icon name="pencil-line" size="small" />
-            <div class="text-12-medium text-text-weak">
+          <div class="flex justify-center items-start gap-3 min-h-5">
+            <Icon name="pencil-line" size="small" class="mt-0.5 shrink-0" />
+            <div class="text-12-medium text-text-weak leading-5">
               {language.t("session.new.lastModified")}&nbsp;
               <span class="text-text-strong">
                 {DateTime.fromMillis(project().time.updated ?? project().time.created)
-                  .setLocale(language.locale())
+                  .setLocale(language.intl())
                   .toRelative()}
               </span>
             </div>

@@ -9,7 +9,7 @@ Aby znaleźć się z przykładami, przejrzyj [wtyczki](/docs/ecosystem#plugins) 
 
 ---
 
-## użyj wtyczki
+## Użyj wtyczki
 
 Istnieją dwa sposoby ładowania wtyczek.
 
@@ -51,7 +51,7 @@ Przeglądaj dostępną wtyczkę w [ekosystemie](/docs/ecosystem#plugins).
 
 ---
 
-### Załaduj zamówienie
+### Kolejność ładowania
 
 Wtyczki są ładowane ze wszystkich źródeł, a wszystkie hooki napisane po kolei. Kolejność ładowania do:
 
@@ -118,7 +118,7 @@ Funkcja dostępu do:
 - `project`: Aktualne informacje o projekcie.
 - `directory`: Bieżący katalog roboczy.
 - `worktree`: Ścieżka eksploatacyjna Git.
-- `client`: Klient SDK z otwartym kodem do sztucznej inteligencji.
+- `client`: Klient SDK z opencode do sztucznej inteligencji.
 - `$`: [API obudowy](https://bun.com/docs/runtime/shell) Buna do wykonywania oprogramowania.
 
 ---
@@ -192,7 +192,7 @@ Wtyczki mogą subskrybować zdarzenia, jak zastosować poniżej sekcji Przykład
 
 - `todo.updated`
 
-#### Wydarzenia powłoki
+#### Wydarzenia shell
 
 - `shell.env`
 
@@ -211,7 +211,7 @@ Wtyczki mogą subskrybować zdarzenia, jak zastosować poniżej sekcji Przykład
 
 ## Przykłady
 
-Oto kilka dostępnych wtyczek, które można udostępnić do kodu opencode.
+Oto kilka dostępnych wtyczek, które można udostępnić do opencode.
 
 ---
 
@@ -310,7 +310,7 @@ Twoje narzędzie będzie dostępne dla otwartego kodu wraz z narzędziami użytk
 
 ---
 
-### Wycięcie lasu
+### Logowanie
 
 użyj `client.app.log()` zamiast `console.log` do rejestracji strukturalnego:
 
