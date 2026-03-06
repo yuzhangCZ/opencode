@@ -1,5 +1,11 @@
 # SSE 事件总目录
 
+- Contract Baseline: `dev@cf425d114`
+- Last Verified: `2026-03-06`
+- Runtime Observed Version: `v1.2.15`
+- Version Note Default: 未单独标注字段默认 `since v1.2.0`（以本文件 Contract Baseline 为准）
+
+
 本目录按“事件分类 + 稳定性”列出全部 SSE 事件。
 
 - `contracted`: 在 OpenAPI/SDK `Event` 联合中定义。
@@ -7,9 +13,9 @@
 
 统计：
 
-- `contracted`: 42
+- `contracted`: 45
 - `runtime-only`: 1
-- 总计：43
+- 总计：46
 
 ## 1. Server / Global / Project / Installation
 
@@ -43,6 +49,7 @@
 - `message.updated` (`contracted`)
 - `message.removed` (`contracted`)
 - `message.part.updated` (`contracted`)
+- `message.part.delta` (`contracted`)
 - `message.part.removed` (`contracted`)
 
 详情见 [03-message-events.md](./03-message-events.md)
@@ -66,12 +73,14 @@
 
 详情见 [05-file-lsp-events.md](./05-file-lsp-events.md)
 
-## 6. PTY / Worktree
+## 6. PTY / Workspace / Worktree
 
 - `pty.created` (`contracted`)
 - `pty.updated` (`contracted`)
 - `pty.exited` (`contracted`)
 - `pty.deleted` (`contracted`)
+- `workspace.ready` (`contracted`)
+- `workspace.failed` (`contracted`)
 - `worktree.ready` (`contracted`)
 - `worktree.failed` (`contracted`)
 
@@ -94,11 +103,20 @@
 实例流 `/event`：
 
 ```json
-{"type":"event.type","properties":{}}
+{
+  "type": "event.type",
+  "properties": {}
+}
 ```
 
 全局流 `/global/event`：
 
 ```json
-{"directory":"/repo","payload":{"type":"event.type","properties":{}}}
+{
+  "directory": "/repo",
+  "payload": {
+    "type": "event.type",
+    "properties": {}
+  }
+}
 ```

@@ -1,5 +1,11 @@
 # OpenCode SSE 参考 / SSE Reference
 
+- Contract Baseline: `dev@cf425d114`
+- Last Verified: `2026-03-06`
+- Runtime Observed Version: `v1.2.15`
+- Version Note Default: 未单独标注字段默认 `since v1.2.0`（以本文件 Contract Baseline 为准）
+
+
 ## 1. 概览
 
 OpenCode 暴露两个 SSE 端点：
@@ -61,17 +67,23 @@ Connection: keep-alive
 4. [Message 事件](./sse/03-message-events.md)
 5. [Permission / Question 事件](./sse/04-permission-question-events.md)
 6. [File / LSP 事件](./sse/05-file-lsp-events.md)
-7. [PTY / Worktree 事件](./sse/06-pty-worktree-events.md)
+7. [PTY / Workspace / Worktree 事件](./sse/06-pty-worktree-events.md)
 8. [TUI / MCP / Command 事件](./sse/07-tui-mcp-command-events.md)
 
 ## 5. 契约差异总览
 
-- `contracted`：在 OpenAPI/SDK `Event` 联合中定义（当前 42 个）。
+- `contracted`：在 OpenAPI/SDK `Event` 联合中定义（当前 45 个）。
 - `runtime-only`：运行时会发送但未纳入 OpenAPI/SDK 联合。
 
 当前已确认差异：
 
 - `server.heartbeat`: `runtime-only`
+
+已纳入契约（`dev` 分支）：
+
+- `message.part.delta`
+- `workspace.ready`
+- `workspace.failed`
 
 证据：
 

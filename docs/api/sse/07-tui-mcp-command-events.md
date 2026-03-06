@@ -1,10 +1,25 @@
 # TUI / MCP / Command 事件
 
+- Contract Baseline: `dev@cf425d114`
+- Last Verified: `2026-03-06`
+- Runtime Observed Version: `v1.2.15`
+- Version Note Default: 未单独标注字段默认 `since v1.2.0`（以本文件 Contract Baseline 为准）
+
+
 ## `tui.prompt.append`
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"tui.prompt.append","properties":{"text":"string"}}`
+- payload: 
+
+```json
+{
+  "type": "tui.prompt.append",
+  "properties": {
+    "text": "string"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -13,7 +28,12 @@
 - 真实报文示例:
 
 ```json
-{"type":"tui.prompt.append","properties":{"text":"/plan split sse docs"}}
+{
+  "type": "tui.prompt.append",
+  "properties": {
+    "text": "/plan split sse docs"
+  }
+}
 ```
 
 - 触发方式: TUI 侧 prompt 追加动作。
@@ -22,7 +42,16 @@
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"tui.command.execute","properties":{"command":"string"}}`
+- payload: 
+
+```json
+{
+  "type": "tui.command.execute",
+  "properties": {
+    "command": "string"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -31,7 +60,12 @@
 - 真实报文示例:
 
 ```json
-{"type":"tui.command.execute","properties":{"command":"session.new"}}
+{
+  "type": "tui.command.execute",
+  "properties": {
+    "command": "session.new"
+  }
+}
 ```
 
 - 触发方式: TUI 快捷键或命令面板执行命令。
@@ -40,7 +74,19 @@
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"tui.toast.show","properties":{"title":"string?","message":"string","variant":"info|success|warning|error","duration":0}}`
+- payload: 
+
+```json
+{
+  "type": "tui.toast.show",
+  "properties": {
+    "title": "string?",
+    "message": "string",
+    "variant": "info|success|warning|error",
+    "duration": 0
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -61,7 +107,16 @@ data: {"directory":"/Users/zy/Code/opencode/opencode/packages/opencode","payload
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"tui.session.select","properties":{"sessionID":"string"}}`
+- payload: 
+
+```json
+{
+  "type": "tui.session.select",
+  "properties": {
+    "sessionID": "string"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -70,7 +125,12 @@ data: {"directory":"/Users/zy/Code/opencode/opencode/packages/opencode","payload
 - 真实报文示例:
 
 ```json
-{"type":"tui.session.select","properties":{"sessionID":"ses_3493ea0d5ffeyIpkiiH9FYGHFt"}}
+{
+  "type": "tui.session.select",
+  "properties": {
+    "sessionID": "ses_3493ea0d5ffeyIpkiiH9FYGHFt"
+  }
+}
 ```
 
 - 触发方式: TUI 会话切换。
@@ -79,7 +139,16 @@ data: {"directory":"/Users/zy/Code/opencode/opencode/packages/opencode","payload
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"mcp.tools.changed","properties":{"server":"string"}}`
+- payload: 
+
+```json
+{
+  "type": "mcp.tools.changed",
+  "properties": {
+    "server": "string"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -88,7 +157,12 @@ data: {"directory":"/Users/zy/Code/opencode/opencode/packages/opencode","payload
 - 真实报文示例:
 
 ```json
-{"type":"mcp.tools.changed","properties":{"server":"filesystem"}}
+{
+  "type": "mcp.tools.changed",
+  "properties": {
+    "server": "filesystem"
+  }
+}
 ```
 
 - 触发方式: MCP 工具列表刷新。
@@ -97,7 +171,17 @@ data: {"directory":"/Users/zy/Code/opencode/opencode/packages/opencode","payload
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"mcp.browser.open.failed","properties":{"mcpName":"string","url":"string"}}`
+- payload: 
+
+```json
+{
+  "type": "mcp.browser.open.failed",
+  "properties": {
+    "mcpName": "string",
+    "url": "string"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -107,7 +191,13 @@ data: {"directory":"/Users/zy/Code/opencode/opencode/packages/opencode","payload
 - 真实报文示例:
 
 ```json
-{"type":"mcp.browser.open.failed","properties":{"mcpName":"github","url":"https://github.com/login/oauth/authorize?..."}}
+{
+  "type": "mcp.browser.open.failed",
+  "properties": {
+    "mcpName": "github",
+    "url": "https://github.com/login/oauth/authorize?..."
+  }
+}
 ```
 
 - 触发方式: MCP OAuth 浏览器打开失败。
@@ -116,7 +206,19 @@ data: {"directory":"/Users/zy/Code/opencode/opencode/packages/opencode","payload
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"command.executed","properties":{"name":"string","sessionID":"string","arguments":"string","messageID":"string"}}`
+- payload: 
+
+```json
+{
+  "type": "command.executed",
+  "properties": {
+    "name": "string",
+    "sessionID": "string",
+    "arguments": "string",
+    "messageID": "string"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -128,7 +230,15 @@ data: {"directory":"/Users/zy/Code/opencode/opencode/packages/opencode","payload
 - 真实报文示例:
 
 ```json
-{"type":"command.executed","properties":{"name":"review","sessionID":"ses_3493ea0d5ffeyIpkiiH9FYGHFt","arguments":"docs/api","messageID":"msg_010"}}
+{
+  "type": "command.executed",
+  "properties": {
+    "name": "review",
+    "sessionID": "ses_3493ea0d5ffeyIpkiiH9FYGHFt",
+    "arguments": "docs/api",
+    "messageID": "msg_010"
+  }
+}
 ```
 
 - 触发方式: 服务器命令执行完成。

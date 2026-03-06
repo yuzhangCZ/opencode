@@ -1,10 +1,25 @@
 # File / LSP 事件
 
+- Contract Baseline: `dev@cf425d114`
+- Last Verified: `2026-03-06`
+- Runtime Observed Version: `v1.2.15`
+- Version Note Default: 未单独标注字段默认 `since v1.2.0`（以本文件 Contract Baseline 为准）
+
+
 ## `file.edited`
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"file.edited","properties":{"file":"string"}}`
+- payload: 
+
+```json
+{
+  "type": "file.edited",
+  "properties": {
+    "file": "string"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -13,7 +28,12 @@
 - 真实报文示例:
 
 ```json
-{"type":"file.edited","properties":{"file":"docs/api/02-sse-reference.md"}}
+{
+  "type": "file.edited",
+  "properties": {
+    "file": "docs/api/02-sse-reference.md"
+  }
+}
 ```
 
 - 触发方式: `edit`/`write`/`apply_patch` 成功后发布。
@@ -22,7 +42,17 @@
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"file.watcher.updated","properties":{"file":"string","event":"add|change|unlink"}}`
+- payload: 
+
+```json
+{
+  "type": "file.watcher.updated",
+  "properties": {
+    "file": "string",
+    "event": "add|change|unlink"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -32,7 +62,13 @@
 - 真实报文示例:
 
 ```json
-{"type":"file.watcher.updated","properties":{"file":"docs/api/sse/00-event-catalog.md","event":"add"}}
+{
+  "type": "file.watcher.updated",
+  "properties": {
+    "file": "docs/api/sse/00-event-catalog.md",
+    "event": "add"
+  }
+}
 ```
 
 - 触发方式: 文件监听器检测到变更。
@@ -41,7 +77,17 @@
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"lsp.client.diagnostics","properties":{"serverID":"string","path":"string"}}`
+- payload: 
+
+```json
+{
+  "type": "lsp.client.diagnostics",
+  "properties": {
+    "serverID": "string",
+    "path": "string"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -51,7 +97,13 @@
 - 真实报文示例:
 
 ```json
-{"type":"lsp.client.diagnostics","properties":{"serverID":"tsserver","path":"/Users/zy/Code/opencode/opencode/packages/opencode/src/server/server.ts"}}
+{
+  "type": "lsp.client.diagnostics",
+  "properties": {
+    "serverID": "tsserver",
+    "path": "/Users/zy/Code/opencode/opencode/packages/opencode/src/server/server.ts"
+  }
+}
 ```
 
 - 触发方式: LSP 客户端诊断更新。
@@ -60,7 +112,14 @@
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"lsp.updated","properties":{}}`
+- payload: 
+
+```json
+{
+  "type": "lsp.updated",
+  "properties": {}
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -69,7 +128,10 @@
 - 真实报文示例:
 
 ```json
-{"type":"lsp.updated","properties":{}}
+{
+  "type": "lsp.updated",
+  "properties": {}
+}
 ```
 
 - 触发方式: LSP 状态刷新。

@@ -1,5 +1,11 @@
 # Session 事件
 
+- Contract Baseline: `dev@cf425d114`
+- Last Verified: `2026-03-06`
+- Runtime Observed Version: `v1.2.15`
+- Version Note Default: 未单独标注字段默认 `since v1.2.0`（以本文件 Contract Baseline 为准）
+
+
 ## `session.status`
 
 - 稳定性: `contracted`
@@ -7,7 +13,15 @@
 - payload 结构:
 
 ```json
-{"type":"session.status","properties":{"sessionID":"string","status":{"type":"idle|busy|retry"}}}
+{
+  "type": "session.status",
+  "properties": {
+    "sessionID": "string",
+    "status": {
+      "type": "idle|busy|retry"
+    }
+  }
+}
 ```
 
 - 字段说明:
@@ -22,7 +36,15 @@
 - 真实报文示例:
 
 ```json
-{"type":"session.status","properties":{"sessionID":"ses_3493ea0d5ffeyIpkiiH9FYGHFt","status":{"type":"busy"}}}
+{
+  "type": "session.status",
+  "properties": {
+    "sessionID": "ses_3493ea0d5ffeyIpkiiH9FYGHFt",
+    "status": {
+      "type": "busy"
+    }
+  }
+}
 ```
 
 - 触发方式: 消息执行进入/退出忙碌状态（`session/status.ts`）。
@@ -31,7 +53,16 @@
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"session.idle","properties":{"sessionID":"string"}}`
+- payload: 
+
+```json
+{
+  "type": "session.idle",
+  "properties": {
+    "sessionID": "string"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -40,7 +71,12 @@
 - 真实报文示例:
 
 ```json
-{"type":"session.idle","properties":{"sessionID":"ses_3493ea0d5ffeyIpkiiH9FYGHFt"}}
+{
+  "type": "session.idle",
+  "properties": {
+    "sessionID": "ses_3493ea0d5ffeyIpkiiH9FYGHFt"
+  }
+}
 ```
 
 - 触发方式: 会话回到空闲状态。
@@ -49,7 +85,16 @@
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"session.compacted","properties":{"sessionID":"string"}}`
+- payload: 
+
+```json
+{
+  "type": "session.compacted",
+  "properties": {
+    "sessionID": "string"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -58,7 +103,12 @@
 - 真实报文示例:
 
 ```json
-{"type":"session.compacted","properties":{"sessionID":"ses_3493ea0d5ffeyIpkiiH9FYGHFt"}}
+{
+  "type": "session.compacted",
+  "properties": {
+    "sessionID": "ses_3493ea0d5ffeyIpkiiH9FYGHFt"
+  }
+}
 ```
 
 - 触发方式: 执行会话压缩。
@@ -70,7 +120,19 @@
 - payload 结构:
 
 ```json
-{"type":"session.created","properties":{"info":{"id":"string","title":"string","time":{"created":0,"updated":0}}}}
+{
+  "type": "session.created",
+  "properties": {
+    "info": {
+      "id": "string",
+      "title": "string",
+      "time": {
+        "created": 0,
+        "updated": 0
+      }
+    }
+  }
+}
 ```
 
 | 字段 | 类型 | 说明 |
@@ -92,7 +154,16 @@ data: {"type":"session.created","properties":{"info":{"id":"ses_3493ea0d5ffeyIpk
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"session.updated","properties":{"info":{...Session}}}`
+- payload（结构化示例，非完整字段）:
+
+```json
+{
+  "type": "session.updated",
+  "properties": {
+    "info": "<Session>"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -101,7 +172,19 @@ data: {"type":"session.created","properties":{"info":{"id":"ses_3493ea0d5ffeyIpk
 - 真实报文示例:
 
 ```json
-{"type":"session.updated","properties":{"info":{"id":"ses_3493ea0d5ffeyIpkiiH9FYGHFt","title":"Refactor SSE docs","time":{"created":1772592652074,"updated":1772593102000}}}}
+{
+  "type": "session.updated",
+  "properties": {
+    "info": {
+      "id": "ses_3493ea0d5ffeyIpkiiH9FYGHFt",
+      "title": "Refactor SSE docs",
+      "time": {
+        "created": 1772592652074,
+        "updated": 1772593102000
+      }
+    }
+  }
+}
 ```
 
 - 触发方式: 会话元数据变化。
@@ -110,7 +193,16 @@ data: {"type":"session.created","properties":{"info":{"id":"ses_3493ea0d5ffeyIpk
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"session.deleted","properties":{"info":{...Session}}}`
+- payload（结构化示例，非完整字段）:
+
+```json
+{
+  "type": "session.deleted",
+  "properties": {
+    "info": "<Session>"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -119,7 +211,15 @@ data: {"type":"session.created","properties":{"info":{"id":"ses_3493ea0d5ffeyIpk
 - 真实报文示例:
 
 ```json
-{"type":"session.deleted","properties":{"info":{"id":"ses_archive_01","title":"Old Session"}}}
+{
+  "type": "session.deleted",
+  "properties": {
+    "info": {
+      "id": "ses_archive_01",
+      "title": "Old Session"
+    }
+  }
+}
 ```
 
 - 触发方式: 删除/归档流程。
@@ -128,7 +228,25 @@ data: {"type":"session.created","properties":{"info":{"id":"ses_3493ea0d5ffeyIpk
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"session.diff","properties":{"sessionID":"string","diff":[{"file":"string","before":"string","after":"string","additions":0,"deletions":0}]}}`
+- payload: 
+
+```json
+{
+  "type": "session.diff",
+  "properties": {
+    "sessionID": "string",
+    "diff": [
+      {
+        "file": "string",
+        "before": "string",
+        "after": "string",
+        "additions": 0,
+        "deletions": 0
+      }
+    ]
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -138,7 +256,21 @@ data: {"type":"session.created","properties":{"info":{"id":"ses_3493ea0d5ffeyIpk
 - 真实报文示例:
 
 ```json
-{"type":"session.diff","properties":{"sessionID":"ses_3493ea0d5ffeyIpkiiH9FYGHFt","diff":[{"file":"docs/api/02-sse-reference.md","before":"...","after":"...","additions":20,"deletions":3}]}}
+{
+  "type": "session.diff",
+  "properties": {
+    "sessionID": "ses_3493ea0d5ffeyIpkiiH9FYGHFt",
+    "diff": [
+      {
+        "file": "docs/api/02-sse-reference.md",
+        "before": "...",
+        "after": "...",
+        "additions": 20,
+        "deletions": 3
+      }
+    ]
+  }
+}
 ```
 
 - 触发方式: 回滚或摘要路径产出 diff。
@@ -147,7 +279,22 @@ data: {"type":"session.created","properties":{"info":{"id":"ses_3493ea0d5ffeyIpk
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"session.error","properties":{"sessionID":"string?","error":{"name":"UnknownError","data":{"message":"string"}}}}`
+- payload: 
+
+```json
+{
+  "type": "session.error",
+  "properties": {
+    "sessionID": "string?",
+    "error": {
+      "name": "UnknownError",
+      "data": {
+        "message": "string"
+      }
+    }
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -157,7 +304,18 @@ data: {"type":"session.created","properties":{"info":{"id":"ses_3493ea0d5ffeyIpk
 - 真实报文示例:
 
 ```json
-{"type":"session.error","properties":{"sessionID":"ses_3493ea0d5ffeyIpkiiH9FYGHFt","error":{"name":"UnknownError","data":{"message":"Model request failed"}}}}
+{
+  "type": "session.error",
+  "properties": {
+    "sessionID": "ses_3493ea0d5ffeyIpkiiH9FYGHFt",
+    "error": {
+      "name": "UnknownError",
+      "data": {
+        "message": "Model request failed"
+      }
+    }
+  }
+}
 ```
 
 - 触发方式: 推理/工具/配置等异常路径。
@@ -166,7 +324,24 @@ data: {"type":"session.created","properties":{"info":{"id":"ses_3493ea0d5ffeyIpk
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"todo.updated","properties":{"sessionID":"string","todos":[{"id":"string","content":"string","status":"string","priority":"string"}]}}`
+- payload: 
+
+```json
+{
+  "type": "todo.updated",
+  "properties": {
+    "sessionID": "string",
+    "todos": [
+      {
+        "id": "string",
+        "content": "string",
+        "status": "string",
+        "priority": "string"
+      }
+    ]
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -176,7 +351,20 @@ data: {"type":"session.created","properties":{"info":{"id":"ses_3493ea0d5ffeyIpk
 - 真实报文示例:
 
 ```json
-{"type":"todo.updated","properties":{"sessionID":"ses_3493ea0d5ffeyIpkiiH9FYGHFt","todos":[{"id":"todo_1","content":"Split SSE docs","status":"in_progress","priority":"high"}]}}
+{
+  "type": "todo.updated",
+  "properties": {
+    "sessionID": "ses_3493ea0d5ffeyIpkiiH9FYGHFt",
+    "todos": [
+      {
+        "id": "todo_1",
+        "content": "Split SSE docs",
+        "status": "in_progress",
+        "priority": "high"
+      }
+    ]
+  }
+}
 ```
 
 - 触发方式: todo 工具更新计划。
@@ -185,7 +373,16 @@ data: {"type":"session.created","properties":{"info":{"id":"ses_3493ea0d5ffeyIpk
 
 - 稳定性: `contracted`
 - 端点可见性: `/event`, `/global/event`
-- payload: `{"type":"vcs.branch.updated","properties":{"branch":"string?"}}`
+- payload: 
+
+```json
+{
+  "type": "vcs.branch.updated",
+  "properties": {
+    "branch": "string?"
+  }
+}
+```
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -194,7 +391,12 @@ data: {"type":"session.created","properties":{"info":{"id":"ses_3493ea0d5ffeyIpk
 - 真实报文示例:
 
 ```json
-{"type":"vcs.branch.updated","properties":{"branch":"codex/sse-doc-split"}}
+{
+  "type": "vcs.branch.updated",
+  "properties": {
+    "branch": "codex/sse-doc-split"
+  }
+}
 ```
 
 - 触发方式: 分支切换或监听更新。

@@ -1,5 +1,11 @@
 # OpenCode Server REST 接口参考 / REST API Reference
 
+- Contract Baseline: `dev@cf425d114`
+- Last Verified: `2026-03-06`
+- Runtime Observed Version: `v1.2.15`
+- Version Note Default: 未单独标注字段默认 `since v1.2.0`（以本文件 Contract Baseline 为准）
+
+
 > 范围说明 / Scope: 本文档仅覆盖 `docs/opencode-server-api-docs.md` 中已公开的 server 端点，不新增推测接口。
 
 ## 1. 通用约定 / General Conventions
@@ -38,7 +44,10 @@ curl -s http://localhost:4096/global/health
 ```
 - Response:
 ```json
-{"healthy":true,"version":"1.x.x"}
+{
+  "healthy": true,
+  "version": "1.x.x"
+}
 ```
 
 ### GET /global/event
@@ -49,7 +58,13 @@ curl -N http://localhost:4096/global/event
 ```
 - Response:
 ```json
-{"directory":"global","payload":{"type":"server.connected","properties":{}}}
+{
+  "directory": "global",
+  "payload": {
+    "type": "server.connected",
+    "properties": {}
+  }
+}
 ```
 
 ### GET /global/config
@@ -60,7 +75,11 @@ curl -s http://localhost:4096/global/config
 ```
 - Response:
 ```json
-{"$schema":"...","providers":{},"model":{}}
+{
+  "$schema": "...",
+  "providers": {},
+  "model": {}
+}
 ```
 
 ### PATCH /global/config
@@ -69,13 +88,25 @@ curl -s http://localhost:4096/global/config
 ```bash
 curl -s -X PATCH http://localhost:4096/global/config -H 'content-type: application/json' -d '{"model":{}}'
 ```
+
+- Request Body:
+
+```json
+{
+  "model": {}
+}
+```
 - Request:
 ```json
-{"model":{}}
+{
+  "model": {}
+}
 ```
 - Response:
 ```json
-{"model":{}}
+{
+  "model": {}
+}
 ```
 
 ### POST /global/dispose
@@ -99,7 +130,12 @@ curl -s 'http://localhost:4096/session?limit=20&roots=true'
 ```
 - Response:
 ```json
-[{"id":"ses_xxx","title":"demo"}]
+[
+  {
+    "id": "ses_xxx",
+    "title": "demo"
+  }
+]
 ```
 
 ### POST /session
@@ -108,13 +144,27 @@ curl -s 'http://localhost:4096/session?limit=20&roots=true'
 ```bash
 curl -s -X POST http://localhost:4096/session -H 'content-type: application/json' -d '{"title":"demo"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "title": "demo"
+}
+```
 - Request:
 ```json
-{"title":"demo","parentID":null}
+{
+  "title": "demo",
+  "parentID": null
+}
 ```
 - Response:
 ```json
-{"id":"ses_xxx","title":"demo"}
+{
+  "id": "ses_xxx",
+  "title": "demo"
+}
 ```
 
 ### GET /session/status
@@ -125,7 +175,11 @@ curl -s http://localhost:4096/session/status
 ```
 - Response:
 ```json
-{"ses_xxx":{"type":"idle"}}
+{
+  "ses_xxx": {
+    "type": "idle"
+  }
+}
 ```
 
 ### GET /session/{sessionID}
@@ -136,7 +190,10 @@ curl -s http://localhost:4096/session/ses_xxx
 ```
 - Response:
 ```json
-{"id":"ses_xxx","title":"demo"}
+{
+  "id": "ses_xxx",
+  "title": "demo"
+}
 ```
 
 ### DELETE /session/{sessionID}
@@ -156,13 +213,29 @@ true
 ```bash
 curl -s -X PATCH http://localhost:4096/session/ses_xxx -H 'content-type: application/json' -d '{"title":"new"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "title": "new"
+}
+```
 - Request:
 ```json
-{"title":"new","time":{"archived":null}}
+{
+  "title": "new",
+  "time": {
+    "archived": null
+  }
+}
 ```
 - Response:
 ```json
-{"id":"ses_xxx","title":"new"}
+{
+  "id": "ses_xxx",
+  "title": "new"
+}
 ```
 
 ### GET /session/{sessionID}/children
@@ -173,7 +246,11 @@ curl -s http://localhost:4096/session/ses_xxx/children
 ```
 - Response:
 ```json
-[{"id":"ses_child"}]
+[
+  {
+    "id": "ses_child"
+  }
+]
 ```
 
 ### GET /session/{sessionID}/todo
@@ -184,7 +261,12 @@ curl -s http://localhost:4096/session/ses_xxx/todo
 ```
 - Response:
 ```json
-[{"id":"todo_1","content":"..."}]
+[
+  {
+    "id": "todo_1",
+    "content": "..."
+  }
+]
 ```
 
 ### POST /session/{sessionID}/init
@@ -192,6 +274,12 @@ curl -s http://localhost:4096/session/ses_xxx/todo
 - cURL:
 ```bash
 curl -s -X POST http://localhost:4096/session/ses_xxx/init -H 'content-type: application/json' -d '{}'
+```
+
+- Request Body:
+
+```json
+{}
 ```
 - Request:
 ```json
@@ -208,13 +296,23 @@ true
 ```bash
 curl -s -X POST http://localhost:4096/session/ses_xxx/fork -H 'content-type: application/json' -d '{}'
 ```
+
+- Request Body:
+
+```json
+{}
+```
 - Request:
 ```json
-{"title":"forked"}
+{
+  "title": "forked"
+}
 ```
 - Response:
 ```json
-{"id":"ses_forked"}
+{
+  "id": "ses_forked"
+}
 ```
 
 ### POST /session/{sessionID}/abort
@@ -236,7 +334,12 @@ curl -s -X POST http://localhost:4096/session/ses_xxx/share
 ```
 - Response:
 ```json
-{"id":"ses_xxx","share":{"url":"https://..."}}
+{
+  "id": "ses_xxx",
+  "share": {
+    "url": "https://..."
+  }
+}
 ```
 
 ### DELETE /session/{sessionID}/share
@@ -247,7 +350,10 @@ curl -s -X DELETE http://localhost:4096/session/ses_xxx/share
 ```
 - Response:
 ```json
-{"id":"ses_xxx","share":null}
+{
+  "id": "ses_xxx",
+  "share": null
+}
 ```
 
 ### GET /session/{sessionID}/diff
@@ -258,7 +364,13 @@ curl -s 'http://localhost:4096/session/ses_xxx/diff?messageID=msg_1'
 ```
 - Response:
 ```json
-[{"file":"src/a.ts","additions":3,"deletions":1}]
+[
+  {
+    "file": "src/a.ts",
+    "additions": 3,
+    "deletions": 1
+  }
+]
 ```
 
 ### POST /session/{sessionID}/summarize
@@ -267,9 +379,23 @@ curl -s 'http://localhost:4096/session/ses_xxx/diff?messageID=msg_1'
 ```bash
 curl -s -X POST http://localhost:4096/session/ses_xxx/summarize -H 'content-type: application/json' -d '{"providerID":"anthropic","modelID":"claude-3-5-sonnet","auto":false}'
 ```
+
+- Request Body:
+
+```json
+{
+  "providerID": "anthropic",
+  "modelID": "claude-3-5-sonnet",
+  "auto": false
+}
+```
 - Request:
 ```json
-{"providerID":"anthropic","modelID":"claude-3-5-sonnet","auto":false}
+{
+  "providerID": "anthropic",
+  "modelID": "claude-3-5-sonnet",
+  "auto": false
+}
 ```
 - Response:
 ```json
@@ -284,7 +410,13 @@ curl -s 'http://localhost:4096/session/ses_xxx/message?limit=50'
 ```
 - Response:
 ```json
-[{"id":"msg_1","role":"user","parts":[]}]
+[
+  {
+    "id": "msg_1",
+    "role": "user",
+    "parts": []
+  }
+]
 ```
 
 ### POST /session/{sessionID}/message
@@ -293,13 +425,36 @@ curl -s 'http://localhost:4096/session/ses_xxx/message?limit=50'
 ```bash
 curl -s -X POST http://localhost:4096/session/ses_xxx/message -H 'content-type: application/json' -d '{"parts":[{"type":"text","text":"hello"}]}'
 ```
+
+- Request Body:
+
+```json
+{
+  "parts": [
+    {
+      "type": "text",
+      "text": "hello"
+    }
+  ]
+}
+```
 - Request:
 ```json
-{"parts":[{"type":"text","text":"hello"}]}
+{
+  "parts": [
+    {
+      "type": "text",
+      "text": "hello"
+    }
+  ]
+}
 ```
 - Response:
 ```json
-{"id":"msg_new","role":"assistant"}
+{
+  "id": "msg_new",
+  "role": "assistant"
+}
 ```
 
 ### POST /session/{sessionID}/prompt_async
@@ -308,9 +463,29 @@ curl -s -X POST http://localhost:4096/session/ses_xxx/message -H 'content-type: 
 ```bash
 curl -i -X POST http://localhost:4096/session/ses_xxx/prompt_async -H 'content-type: application/json' -d '{"parts":[{"type":"text","text":"hello"}]}'
 ```
+
+- Request Body:
+
+```json
+{
+  "parts": [
+    {
+      "type": "text",
+      "text": "hello"
+    }
+  ]
+}
+```
 - Request:
 ```json
-{"parts":[{"type":"text","text":"hello"}]}
+{
+  "parts": [
+    {
+      "type": "text",
+      "text": "hello"
+    }
+  ]
+}
 ```
 - Response:
 ```json
@@ -323,13 +498,25 @@ curl -i -X POST http://localhost:4096/session/ses_xxx/prompt_async -H 'content-t
 ```bash
 curl -s -X POST http://localhost:4096/session/ses_xxx/command -H 'content-type: application/json' -d '{"command":"/help"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "command": "/help"
+}
+```
 - Request:
 ```json
-{"command":"/help"}
+{
+  "command": "/help"
+}
 ```
 - Response:
 ```json
-{"id":"msg_cmd"}
+{
+  "id": "msg_cmd"
+}
 ```
 
 ### POST /session/{sessionID}/shell
@@ -338,13 +525,25 @@ curl -s -X POST http://localhost:4096/session/ses_xxx/command -H 'content-type: 
 ```bash
 curl -s -X POST http://localhost:4096/session/ses_xxx/shell -H 'content-type: application/json' -d '{"command":"ls -la"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "command": "ls -la"
+}
+```
 - Request:
 ```json
-{"command":"ls -la"}
+{
+  "command": "ls -la"
+}
 ```
 - Response:
 ```json
-{"id":"msg_shell"}
+{
+  "id": "msg_shell"
+}
 ```
 
 ### POST /session/{sessionID}/revert
@@ -353,13 +552,25 @@ curl -s -X POST http://localhost:4096/session/ses_xxx/shell -H 'content-type: ap
 ```bash
 curl -s -X POST http://localhost:4096/session/ses_xxx/revert -H 'content-type: application/json' -d '{"messageID":"msg_1"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "messageID": "msg_1"
+}
+```
 - Request:
 ```json
-{"messageID":"msg_1"}
+{
+  "messageID": "msg_1"
+}
 ```
 - Response:
 ```json
-{"id":"ses_xxx"}
+{
+  "id": "ses_xxx"
+}
 ```
 
 ### POST /session/{sessionID}/unrevert
@@ -370,7 +581,9 @@ curl -s -X POST http://localhost:4096/session/ses_xxx/unrevert
 ```
 - Response:
 ```json
-{"id":"ses_xxx"}
+{
+  "id": "ses_xxx"
+}
 ```
 
 ## 5. 文件 API / File APIs
@@ -383,7 +596,12 @@ curl -s 'http://localhost:4096/find?pattern=Server.App'
 ```
 - Response:
 ```json
-[{"path":"src/server/server.ts","line":1}]
+[
+  {
+    "path": "src/server/server.ts",
+    "line": 1
+  }
+]
 ```
 
 ### GET /find/file
@@ -394,7 +612,9 @@ curl -s 'http://localhost:4096/find/file?query=server&limit=20'
 ```
 - Response:
 ```json
-["packages/opencode/src/server/server.ts"]
+[
+  "packages/opencode/src/server/server.ts"
+]
 ```
 
 ### GET /find/symbol
@@ -405,7 +625,13 @@ curl -s 'http://localhost:4096/find/symbol?query=Session'
 ```
 - Response:
 ```json
-[{"name":"Session","kind":"class","path":"..."}]
+[
+  {
+    "name": "Session",
+    "kind": "class",
+    "path": "..."
+  }
+]
 ```
 
 ### GET /file
@@ -416,7 +642,12 @@ curl -s 'http://localhost:4096/file?path=.'
 ```
 - Response:
 ```json
-[{"name":"README.md","type":"file"}]
+[
+  {
+    "name": "README.md",
+    "type": "file"
+  }
+]
 ```
 
 ### GET /file/content
@@ -427,7 +658,10 @@ curl -s 'http://localhost:4096/file/content?path=README.md'
 ```
 - Response:
 ```json
-{"content":"# ...","encoding":"utf-8"}
+{
+  "content": "# ...",
+  "encoding": "utf-8"
+}
 ```
 
 ### GET /file/status
@@ -438,7 +672,12 @@ curl -s http://localhost:4096/file/status
 ```
 - Response:
 ```json
-[{"path":"src/a.ts","status":"modified"}]
+[
+  {
+    "path": "src/a.ts",
+    "status": "modified"
+  }
+]
 ```
 
 ## 6. 项目 API / Project APIs
@@ -451,7 +690,12 @@ curl -s http://localhost:4096/project
 ```
 - Response:
 ```json
-[{"id":"proj_1","name":"demo"}]
+[
+  {
+    "id": "proj_1",
+    "name": "demo"
+  }
+]
 ```
 
 ### GET /project/current
@@ -462,7 +706,10 @@ curl -s http://localhost:4096/project/current
 ```
 - Response:
 ```json
-{"id":"proj_1","directory":"/path"}
+{
+  "id": "proj_1",
+  "directory": "/path"
+}
 ```
 
 ### PATCH /project/{projectID}
@@ -471,13 +718,26 @@ curl -s http://localhost:4096/project/current
 ```bash
 curl -s -X PATCH http://localhost:4096/project/proj_1 -H 'content-type: application/json' -d '{"name":"new-name"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "name": "new-name"
+}
+```
 - Request:
 ```json
-{"name":"new-name"}
+{
+  "name": "new-name"
+}
 ```
 - Response:
 ```json
-{"id":"proj_1","name":"new-name"}
+{
+  "id": "proj_1",
+  "name": "new-name"
+}
 ```
 
 ## 7. PTY API
@@ -490,7 +750,12 @@ curl -s http://localhost:4096/pty
 ```
 - Response:
 ```json
-[{"id":"pty_1","title":"shell"}]
+[
+  {
+    "id": "pty_1",
+    "title": "shell"
+  }
+]
 ```
 
 ### POST /pty
@@ -499,13 +764,29 @@ curl -s http://localhost:4096/pty
 ```bash
 curl -s -X POST http://localhost:4096/pty -H 'content-type: application/json' -d '{"command":"bash","args":[],"cwd":"."}'
 ```
+
+- Request Body:
+
+```json
+{
+  "command": "bash",
+  "args": [],
+  "cwd": "."
+}
+```
 - Request:
 ```json
-{"command":"bash","args":[],"cwd":"."}
+{
+  "command": "bash",
+  "args": [],
+  "cwd": "."
+}
 ```
 - Response:
 ```json
-{"id":"pty_1"}
+{
+  "id": "pty_1"
+}
 ```
 
 ### GET /pty/{ptyID}
@@ -516,7 +797,13 @@ curl -s http://localhost:4096/pty/pty_1
 ```
 - Response:
 ```json
-{"id":"pty_1","size":{"rows":24,"cols":80}}
+{
+  "id": "pty_1",
+  "size": {
+    "rows": 24,
+    "cols": 80
+  }
+}
 ```
 
 ### PUT /pty/{ptyID}
@@ -525,13 +812,30 @@ curl -s http://localhost:4096/pty/pty_1
 ```bash
 curl -s -X PUT http://localhost:4096/pty/pty_1 -H 'content-type: application/json' -d '{"title":"new-title"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "title": "new-title"
+}
+```
 - Request:
 ```json
-{"title":"new-title","size":{"rows":30,"cols":120}}
+{
+  "title": "new-title",
+  "size": {
+    "rows": 30,
+    "cols": 120
+  }
+}
 ```
 - Response:
 ```json
-{"id":"pty_1","title":"new-title"}
+{
+  "id": "pty_1",
+  "title": "new-title"
+}
 ```
 
 ### DELETE /pty/{ptyID}
@@ -566,7 +870,9 @@ curl -s http://localhost:4096/config
 ```
 - Response:
 ```json
-{"$schema":"..."}
+{
+  "$schema": "..."
+}
 ```
 
 ### PATCH /config
@@ -575,13 +881,25 @@ curl -s http://localhost:4096/config
 ```bash
 curl -s -X PATCH http://localhost:4096/config -H 'content-type: application/json' -d '{"model":{}}'
 ```
+
+- Request Body:
+
+```json
+{
+  "model": {}
+}
+```
 - Request:
 ```json
-{"model":{}}
+{
+  "model": {}
+}
 ```
 - Response:
 ```json
-{"model":{}}
+{
+  "model": {}
+}
 ```
 
 ### GET /config/providers
@@ -592,7 +910,10 @@ curl -s http://localhost:4096/config/providers
 ```
 - Response:
 ```json
-{"providers":[],"default":{}}
+{
+  "providers": [],
+  "default": {}
+}
 ```
 
 ## 9. Experimental API
@@ -605,7 +926,10 @@ curl -s http://localhost:4096/experimental/tool/ids
 ```
 - Response:
 ```json
-["edit_file","run_command"]
+[
+  "edit_file",
+  "run_command"
+]
 ```
 
 ### GET /experimental/tool
@@ -616,7 +940,12 @@ curl -s 'http://localhost:4096/experimental/tool?provider=openai&model=gpt-4.1'
 ```
 - Response:
 ```json
-[{"id":"edit_file","description":"..."}]
+[
+  {
+    "id": "edit_file",
+    "description": "..."
+  }
+]
 ```
 
 ### POST /experimental/worktree
@@ -625,13 +954,25 @@ curl -s 'http://localhost:4096/experimental/tool?provider=openai&model=gpt-4.1'
 ```bash
 curl -s -X POST http://localhost:4096/experimental/worktree -H 'content-type: application/json' -d '{"branch":"feat/x"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "branch": "feat/x"
+}
+```
 - Request:
 ```json
-{"branch":"feat/x"}
+{
+  "branch": "feat/x"
+}
 ```
 - Response:
 ```json
-{"directory":"/tmp/worktree-x"}
+{
+  "directory": "/tmp/worktree-x"
+}
 ```
 
 ### GET /experimental/worktree
@@ -642,7 +983,9 @@ curl -s http://localhost:4096/experimental/worktree
 ```
 - Response:
 ```json
-["/tmp/worktree-x"]
+[
+  "/tmp/worktree-x"
+]
 ```
 
 ### DELETE /experimental/worktree
@@ -651,9 +994,19 @@ curl -s http://localhost:4096/experimental/worktree
 ```bash
 curl -s -X DELETE http://localhost:4096/experimental/worktree -H 'content-type: application/json' -d '{"directory":"/tmp/worktree-x"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "directory": "/tmp/worktree-x"
+}
+```
 - Request:
 ```json
-{"directory":"/tmp/worktree-x"}
+{
+  "directory": "/tmp/worktree-x"
+}
 ```
 - Response:
 ```json
@@ -666,9 +1019,19 @@ true
 ```bash
 curl -s -X POST http://localhost:4096/experimental/worktree/reset -H 'content-type: application/json' -d '{"directory":"/tmp/worktree-x"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "directory": "/tmp/worktree-x"
+}
+```
 - Request:
 ```json
-{"directory":"/tmp/worktree-x"}
+{
+  "directory": "/tmp/worktree-x"
+}
 ```
 - Response:
 ```json
@@ -683,7 +1046,9 @@ curl -s http://localhost:4096/experimental/resource
 ```
 - Response:
 ```json
-{"resources":{}}
+{
+  "resources": {}
+}
 ```
 
 ## 10. MCP API
@@ -696,7 +1061,11 @@ curl -s http://localhost:4096/mcp
 ```
 - Response:
 ```json
-{"github":{"connected":true}}
+{
+  "github": {
+    "connected": true
+  }
+}
 ```
 
 ### POST /mcp
@@ -705,13 +1074,28 @@ curl -s http://localhost:4096/mcp
 ```bash
 curl -s -X POST http://localhost:4096/mcp -H 'content-type: application/json' -d '{"name":"github","config":{}}'
 ```
+
+- Request Body:
+
+```json
+{
+  "name": "github",
+  "config": {}
+}
+```
 - Request:
 ```json
-{"name":"github","config":{}}
+{
+  "name": "github",
+  "config": {}
+}
 ```
 - Response:
 ```json
-{"name":"github","connected":false}
+{
+  "name": "github",
+  "connected": false
+}
 ```
 
 ### POST /mcp/{name}/auth
@@ -722,7 +1106,9 @@ curl -s -X POST http://localhost:4096/mcp/github/auth
 ```
 - Response:
 ```json
-{"authorizationUrl":"https://..."}
+{
+  "authorizationUrl": "https://..."
+}
 ```
 
 ### POST /mcp/{name}/auth/callback
@@ -731,13 +1117,26 @@ curl -s -X POST http://localhost:4096/mcp/github/auth
 ```bash
 curl -s -X POST http://localhost:4096/mcp/github/auth/callback -H 'content-type: application/json' -d '{"code":"abc"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "code": "abc"
+}
+```
 - Request:
 ```json
-{"code":"abc"}
+{
+  "code": "abc"
+}
 ```
 - Response:
 ```json
-{"name":"github","connected":true}
+{
+  "name": "github",
+  "connected": true
+}
 ```
 
 ### POST /mcp/{name}/connect
@@ -770,9 +1169,19 @@ true
 ```bash
 curl -s -X POST http://localhost:4096/session/ses_xxx/permissions/perm_1 -H 'content-type: application/json' -d '{"response":"once"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "response": "once"
+}
+```
 - Request:
 ```json
-{"response":"once"}
+{
+  "response": "once"
+}
 ```
 - Response:
 ```json
@@ -785,9 +1194,21 @@ true
 ```bash
 curl -s -X POST http://localhost:4096/permission/perm_1/reply -H 'content-type: application/json' -d '{"reply":"approve","message":"ok"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "reply": "approve",
+  "message": "ok"
+}
+```
 - Request:
 ```json
-{"reply":"approve","message":"ok"}
+{
+  "reply": "approve",
+  "message": "ok"
+}
 ```
 - Response:
 ```json
@@ -802,7 +1223,12 @@ curl -s http://localhost:4096/permission
 ```
 - Response:
 ```json
-[{"id":"perm_1","action":"write_file"}]
+[
+  {
+    "id": "perm_1",
+    "action": "write_file"
+  }
+]
 ```
 
 ## 12. Question API
@@ -815,7 +1241,12 @@ curl -s http://localhost:4096/question
 ```
 - Response:
 ```json
-[{"id":"q_1","prompt":"..."}]
+[
+  {
+    "id": "q_1",
+    "prompt": "..."
+  }
+]
 ```
 
 ### POST /question/{requestID}/reply
@@ -824,9 +1255,23 @@ curl -s http://localhost:4096/question
 ```bash
 curl -s -X POST http://localhost:4096/question/q_1/reply -H 'content-type: application/json' -d '{"answers":["A"]}'
 ```
+
+- Request Body:
+
+```json
+{
+  "answers": [
+    "A"
+  ]
+}
+```
 - Request:
 ```json
-{"answers":["A"]}
+{
+  "answers": [
+    "A"
+  ]
+}
 ```
 - Response:
 ```json
@@ -852,9 +1297,19 @@ true
 ```bash
 curl -s -X POST http://localhost:4096/tui/append-prompt -H 'content-type: application/json' -d '{"text":"hello"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "text": "hello"
+}
+```
 - Request:
 ```json
-{"text":"hello"}
+{
+  "text": "hello"
+}
 ```
 - Response:
 ```json
@@ -922,9 +1377,19 @@ true
 ```bash
 curl -s -X POST http://localhost:4096/tui/execute-command -H 'content-type: application/json' -d '{"command":"/help"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "command": "/help"
+}
+```
 - Request:
 ```json
-{"command":"/help"}
+{
+  "command": "/help"
+}
 ```
 - Response:
 ```json
@@ -937,9 +1402,21 @@ true
 ```bash
 curl -s -X POST http://localhost:4096/tui/show-toast -H 'content-type: application/json' -d '{"title":"Done","body":"ok"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "title": "Done",
+  "body": "ok"
+}
+```
 - Request:
 ```json
-{"title":"Done","body":"ok"}
+{
+  "title": "Done",
+  "body": "ok"
+}
 ```
 - Response:
 ```json
@@ -952,9 +1429,21 @@ true
 ```bash
 curl -s -X POST http://localhost:4096/tui/publish -H 'content-type: application/json' -d '{"type":"tui.toast.show","properties":{}}'
 ```
+
+- Request Body:
+
+```json
+{
+  "type": "tui.toast.show",
+  "properties": {}
+}
+```
 - Request:
 ```json
-{"type":"tui.toast.show","properties":{}}
+{
+  "type": "tui.toast.show",
+  "properties": {}
+}
 ```
 - Response:
 ```json
@@ -967,9 +1456,19 @@ true
 ```bash
 curl -s -X POST http://localhost:4096/tui/select-session -H 'content-type: application/json' -d '{"sessionID":"ses_xxx"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "sessionID": "ses_xxx"
+}
+```
 - Request:
 ```json
-{"sessionID":"ses_xxx"}
+{
+  "sessionID": "ses_xxx"
+}
 ```
 - Response:
 ```json
@@ -984,9 +1483,19 @@ true
 ```bash
 curl -s -X PUT http://localhost:4096/auth/openai -H 'content-type: application/json' -d '{"key":"sk-***"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "key": "sk-***"
+}
+```
 - Request:
 ```json
-{"key":"sk-***"}
+{
+  "key": "sk-***"
+}
 ```
 - Response:
 ```json
@@ -1012,7 +1521,19 @@ curl -s http://localhost:4096/provider
 ```
 - Response:
 ```json
-{"all":[{"id":"anthropic"}],"connected":[{"id":"openai"}],"default":{}}
+{
+  "all": [
+    {
+      "id": "anthropic"
+    }
+  ],
+  "connected": [
+    {
+      "id": "openai"
+    }
+  ],
+  "default": {}
+}
 ```
 
 ### GET /provider/auth
@@ -1023,7 +1544,14 @@ curl -s http://localhost:4096/provider/auth
 ```
 - Response:
 ```json
-{"openai":[{"type":"api","label":"API Key"}]}
+{
+  "openai": [
+    {
+      "type": "api",
+      "label": "API Key"
+    }
+  ]
+}
 ```
 
 ### POST /provider/{providerID}/oauth/authorize
@@ -1032,13 +1560,27 @@ curl -s http://localhost:4096/provider/auth
 ```bash
 curl -s -X POST http://localhost:4096/provider/openai/oauth/authorize -H 'content-type: application/json' -d '{"method":0}'
 ```
+
+- Request Body:
+
+```json
+{
+  "method": 0
+}
+```
 - Request:
 ```json
-{"method":0}
+{
+  "method": 0
+}
 ```
 - Response:
 ```json
-{"method":"code","url":"https://...","instructions":"..."}
+{
+  "method": "code",
+  "url": "https://...",
+  "instructions": "..."
+}
 ```
 
 ### POST /provider/{providerID}/oauth/callback
@@ -1047,9 +1589,21 @@ curl -s -X POST http://localhost:4096/provider/openai/oauth/authorize -H 'conten
 ```bash
 curl -s -X POST http://localhost:4096/provider/openai/oauth/callback -H 'content-type: application/json' -d '{"method":0,"code":"abc"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "method": 0,
+  "code": "abc"
+}
+```
 - Request:
 ```json
-{"method":0,"code":"abc"}
+{
+  "method": 0,
+  "code": "abc"
+}
 ```
 - Response:
 ```json
@@ -1064,7 +1618,11 @@ curl -s http://localhost:4096/path
 ```
 - Response:
 ```json
-{"home":"/home/user","state":"/home/user/.opencode","directory":"/repo"}
+{
+  "home": "/home/user",
+  "state": "/home/user/.opencode",
+  "directory": "/repo"
+}
 ```
 
 ### GET /vcs
@@ -1075,7 +1633,9 @@ curl -s http://localhost:4096/vcs
 ```
 - Response:
 ```json
-{"branch":"dev"}
+{
+  "branch": "dev"
+}
 ```
 
 ### GET /command
@@ -1086,7 +1646,12 @@ curl -s http://localhost:4096/command
 ```
 - Response:
 ```json
-[{"name":"run","description":"..."}]
+[
+  {
+    "name": "run",
+    "description": "..."
+  }
+]
 ```
 
 ### POST /log
@@ -1095,9 +1660,24 @@ curl -s http://localhost:4096/command
 ```bash
 curl -s -X POST http://localhost:4096/log -H 'content-type: application/json' -d '{"service":"demo","level":"info","message":"hello"}'
 ```
+
+- Request Body:
+
+```json
+{
+  "service": "demo",
+  "level": "info",
+  "message": "hello"
+}
+```
 - Request:
 ```json
-{"service":"demo","level":"info","message":"hello","extra":{}}
+{
+  "service": "demo",
+  "level": "info",
+  "message": "hello",
+  "extra": {}
+}
 ```
 - Response:
 ```json
@@ -1112,7 +1692,14 @@ curl -s http://localhost:4096/agent
 ```
 - Response:
 ```json
-[{"id":"build"},{"id":"plan"}]
+[
+  {
+    "id": "build"
+  },
+  {
+    "id": "plan"
+  }
+]
 ```
 
 ### GET /skill
@@ -1123,7 +1710,11 @@ curl -s http://localhost:4096/skill
 ```
 - Response:
 ```json
-[{"id":"skill-creator"}]
+[
+  {
+    "id": "skill-creator"
+  }
+]
 ```
 
 ### GET /lsp
@@ -1134,7 +1725,12 @@ curl -s http://localhost:4096/lsp
 ```
 - Response:
 ```json
-[{"name":"typescript","ready":true}]
+[
+  {
+    "name": "typescript",
+    "ready": true
+  }
+]
 ```
 
 ### GET /formatter
@@ -1145,7 +1741,12 @@ curl -s http://localhost:4096/formatter
 ```
 - Response:
 ```json
-[{"name":"prettier","available":true}]
+[
+  {
+    "name": "prettier",
+    "available": true
+  }
+]
 ```
 
 ### GET /event
@@ -1156,7 +1757,10 @@ curl -N http://localhost:4096/event
 ```
 - Response:
 ```json
-{"type":"server.connected","properties":{}}
+{
+  "type": "server.connected",
+  "properties": {}
+}
 ```
 
 ### POST /instance/dispose
@@ -1176,3 +1780,180 @@ true
 - Domain routes: `packages/opencode/src/server/routes/*.ts`
 - Error mapping: `packages/opencode/src/server/error.ts`
 - API source docs: `docs/opencode-server-api-docs.md`
+
+## 16. `dev` 对齐补充端点（Since 标注）
+
+以下端点来自 `dev@cf425d114` 的 OpenAPI 差异补齐，均为 `since v1.2.0`。
+
+### GET /experimental/session
+- Summary: 获取实验性 session 列表。
+- Since: `v1.2.0`
+- 参数:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `directory` | `string` | 可选 | `since v1.2.0` | 目录上下文（query/header） |
+
+- Response 字段:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `items[]` | `Session[]` | 必填 | `since v1.2.0` | 会话列表 |
+
+### GET /experimental/workspace
+- Summary: 获取实验性 workspace 列表。
+- Since: `v1.2.0`
+- Response 字段:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `items[]` | `Workspace[]` | 必填 | `since v1.2.0` | workspace 列表 |
+
+### POST /experimental/workspace
+- Summary: 创建实验性 workspace。
+- Since: `v1.2.0`
+- Request 字段:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `name` | `string` | 可选 | `since v1.2.0` | workspace 名称 |
+| `directory` | `string` | 可选 | `since v1.2.0` | 目标目录 |
+
+- Response 字段:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `ok` | `boolean` | 必填 | `since v1.2.0` | 创建结果 |
+
+### DELETE /experimental/workspace/{id}
+- Summary: 删除实验性 workspace。
+- Since: `v1.2.0`
+- 参数:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `id` | `string` | 必填 | `since v1.2.0` | workspace ID（path） |
+
+- Response: `true`
+
+### GET /session/{sessionID}/message/{messageID}
+- Summary: 获取单条消息详情。
+- Since: `v1.2.0`
+- 参数:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `sessionID` | `string` | 必填 | `since v1.2.0` | 会话 ID（path） |
+| `messageID` | `string` | 必填 | `since v1.2.0` | 消息 ID（path） |
+
+- Response 字段:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `id` | `string` | 必填 | `since v1.2.0` | 消息 ID |
+| `role` | `string` | 必填 | `since v1.2.0` | 消息角色 |
+
+### DELETE /session/{sessionID}/message/{messageID}
+- Summary: 删除单条消息。
+- Since: `v1.2.0`
+- 参数:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `sessionID` | `string` | 必填 | `since v1.2.0` | 会话 ID（path） |
+| `messageID` | `string` | 必填 | `since v1.2.0` | 消息 ID（path） |
+
+- Response: `true`
+
+### PATCH /session/{sessionID}/message/{messageID}/part/{partID}
+- Summary: 更新消息分片（part）。
+- Since: `v1.2.0`
+- 参数:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `sessionID` | `string` | 必填 | `since v1.2.0` | 会话 ID（path） |
+| `messageID` | `string` | 必填 | `since v1.2.0` | 消息 ID（path） |
+| `partID` | `string` | 必填 | `since v1.2.0` | part ID（path） |
+
+- Request 字段:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `part` | `object` | 必填 | `since v1.2.0` | part 新状态 |
+
+- Response: `true`
+
+### DELETE /session/{sessionID}/message/{messageID}/part/{partID}
+- Summary: 删除消息分片（part）。
+- Since: `v1.2.0`
+- 参数:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `sessionID` | `string` | 必填 | `since v1.2.0` | 会话 ID（path） |
+| `messageID` | `string` | 必填 | `since v1.2.0` | 消息 ID（path） |
+| `partID` | `string` | 必填 | `since v1.2.0` | part ID（path） |
+
+- Response: `true`
+
+### DELETE /mcp/{name}/auth
+- Summary: 删除 MCP 鉴权状态。
+- Since: `v1.2.0`
+- 参数:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `name` | `string` | 必填 | `since v1.2.0` | MCP 服务名（path） |
+
+- Response: `true`
+
+### POST /mcp/{name}/auth/authenticate
+- Summary: 提交 MCP 鉴权结果。
+- Since: `v1.2.0`
+- 参数:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `name` | `string` | 必填 | `since v1.2.0` | MCP 服务名（path） |
+
+- Request 字段:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `code` | `string` | 可选 | `since v1.2.0` | 授权码 |
+| `state` | `string` | 可选 | `since v1.2.0` | OAuth state |
+
+- Response: `true`
+
+### GET /tui/control/next
+- Summary: 获取 TUI 控制流下一步状态。
+- Since: `v1.2.0`
+- Response 字段:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `next` | `string` | 可选 | `since v1.2.0` | 下一控制动作 |
+
+### POST /tui/control/response
+- Summary: 提交 TUI 控制响应。
+- Since: `v1.2.0`
+- Request 字段:
+
+| 字段 | 类型 | 必填性 | 版本 | 说明 |
+| --- | --- | --- | --- | --- |
+| `action` | `string` | 必填 | `since v1.2.0` | 用户动作 |
+| `payload` | `object` | 可选 | `since v1.2.0` | 附加数据 |
+
+- Response: `true`
+
+### POST /tui/open-themes
+- Summary: 打开 TUI 主题选择器。
+- Since: `v1.2.0`
+- Response: `true`
+
+## 17. 版本备注规则
+
+1. 字段表中的 `版本` 列采用：`since vX.Y.Z` / `changed vX.Y.Z` / `runtime-only@vX.Y.Z`。
+2. 本文件增补端点均以 `dev@cf425d114` 为契约基线，标注为 `since v1.2.0`。
+3. 若后续发现更早发布版本，按 tag 回溯结果更新 `since` 值。
