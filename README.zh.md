@@ -111,7 +111,9 @@ OpenCode 内置两种 Agent，可用 `Tab` 键快速切换：
 
 仓库内分层架构文档请查看：
 
-- [架构文档索引](./docs/architecture/index.md)
+- [文档总索引](./docs/index.md)
+- [架构文档索引（packages/opencode 专项）](./docs/architecture/index.md)
+- [分包架构索引](./docs/packages/index.md)
 - [REST 接口参考](./docs/api/01-rest-reference.md)
 - [SSE 事件参考](./docs/api/02-sse-reference.md)
 - [插件事件订阅问题分析报告](./docs/architecture/04-plugin-client-event-analysis.md)
