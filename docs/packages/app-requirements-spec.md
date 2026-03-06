@@ -7,7 +7,7 @@
 ## 1. 需求功能总览（按优先级）
 
 - P0：11 条（REQ-APP-001,002,003,004,005,006,007,011,012,013,014）
-- P1：13 条（REQ-APP-008,009,010,015,016,017,018,019,020,021,022,025,026）
+- P1：15 条（REQ-APP-008,009,010,015,016,017,018,019,020,021,022,025,026,035,036）
 - P2：10 条（REQ-APP-023,024,027,028,029,030,031,032,033,034）
 - P3：0 条
 
@@ -136,7 +136,7 @@
 - 需求名称：接收并处理权限请求
 - 优先级：P0
 - 需求内容：前端接收权限请求并允许用户 once/always/reject 反馈。
-- 触发入口：SessionPromptDock 权限卡片按钮
+- 触发入口：SessionPermissionDock 权限卡片按钮
 - 前置条件：SSE 收到 `permission.asked`。
 - 主成功流程：请求入 store -> 用户点击按钮 -> `permission.respond`。
 - 异常与降级行为：请求失败时不清理去重缓存（允许重试）。
@@ -146,7 +146,7 @@
 - 验收标准（Given/When/Then）：
   - Given 收到权限请求，When 用户点击 allow once，Then 发送 respond 且请求最终从列表移除。
   - Given respond 失败，When 请求报错，Then 该请求仍可继续操作（未被错误清理）。
-- 证据：`/Users/zy/Code/opencode/opencode/packages/app/src/pages/session/session-prompt-dock.tsx:90`; `/Users/zy/Code/opencode/opencode/packages/app/src/context/permission.tsx:86`; `/Users/zy/Code/opencode/opencode/packages/app/src/context/global-sync/event-reducer.ts:241`, `:262`
+- 证据：`/Users/zy/Code/opencode/opencode/packages/app/src/pages/session/composer/session-permission-dock.tsx:11`; `/Users/zy/Code/opencode/opencode/packages/app/src/pages/session/composer/session-composer-state.ts:79`; `/Users/zy/Code/opencode/opencode/packages/app/src/context/permission.tsx:97`; `/Users/zy/Code/opencode/opencode/packages/app/src/context/global-sync/event-reducer.ts:268`, `:289`
 - 文档差异备注：无。
 
 ### REQ-APP-012
@@ -170,7 +170,7 @@
 - 需求名称：接收并回答问题请求
 - 优先级：P0
 - 需求内容：前端展示 question 选项，用户提交答案后完成问答闭环。
-- 触发入口：QuestionDock
+- 触发入口：SessionQuestionDock
 - 前置条件：收到 `question.asked` 且请求在当前会话。
 - 主成功流程：渲染选项/自定义输入 -> `question.reply` 提交答案。
 - 异常与降级行为：失败 toast，sending 状态回落。
@@ -180,14 +180,14 @@
 - 验收标准（Given/When/Then）：
   - Given question 到达，When 选择答案并提交，Then 调用 reply 且发送态结束。
   - Given reply 失败，When 返回错误，Then 显示错误提示并可继续重试。
-- 证据：`/Users/zy/Code/opencode/opencode/packages/app/src/components/question-dock.tsx:41`, `:45`; `/Users/zy/Code/opencode/opencode/packages/app/src/context/global-sync/event-reducer.ts:277`, `:298`
+- 证据：`/Users/zy/Code/opencode/opencode/packages/app/src/pages/session/composer/session-question-dock.tsx:135`, `:151`; `/Users/zy/Code/opencode/opencode/packages/app/src/context/global-sync/event-reducer.ts:304`, `:325`
 - 文档差异备注：无。
 
 ### REQ-APP-014
 - 需求名称：拒绝问题请求
 - 优先级：P0
 - 需求内容：用户可拒绝问题请求，前端完成拒绝动作并清理待答项。
-- 触发入口：QuestionDock reject
+- 触发入口：SessionQuestionDock reject
 - 前置条件：存在 question request。
 - 主成功流程：调用 reject -> SSE/本地状态移除请求。
 - 异常与降级行为：失败 toast 且保持当前问题状态。
@@ -197,7 +197,7 @@
 - 验收标准（Given/When/Then）：
   - Given 问题请求存在，When 点击 reject，Then 发送 reject 请求。
   - Given 收到 `question.rejected`，When 事件到达，Then 对应请求从 store 移除。
-- 证据：`/Users/zy/Code/opencode/opencode/packages/app/src/components/question-dock.tsx:51`; `/Users/zy/Code/opencode/opencode/packages/app/src/context/global-sync/event-reducer.ts:299`
+- 证据：`/Users/zy/Code/opencode/opencode/packages/app/src/pages/session/composer/session-question-dock.tsx:151`; `/Users/zy/Code/opencode/opencode/packages/app/src/context/global-sync/event-reducer.ts:326`
 - 文档差异备注：无。
 
 ### REQ-APP-008
@@ -250,6 +250,40 @@
   - Given fork 返回为空，When 请求结束，Then 不发生路由跳转。
 - 证据：`/Users/zy/Code/opencode/opencode/packages/app/src/components/dialog-fork.tsx:57`, `:71`, `:73`
 - 文档差异备注：无。
+
+### REQ-APP-035
+- 需求名称：Shell 模式提交并执行命令
+- 优先级：P1
+- 需求内容：用户在 shell 模式提交输入后，前端调用会话 shell 接口执行命令。
+- 触发入口：Prompt 输入区 shell 模式提交
+- 前置条件：存在 sessionID；模型和 agent 已选中。
+- 主成功流程：清空输入 -> 调用 `session.shell` -> 等待会话消息/状态回流。
+- 异常与降级行为：请求失败 toast，并恢复输入内容与模式。
+- 边界范围（In/Out）：In=shell 命令提交；Out=终端 PTY 交互协议。
+- REST依赖（核心/辅助）：核心 `POST /session/{sessionID}/shell`。
+- SSE依赖（事件+用途）：补偿 `session.status`、`message.updated`、`message.part.updated`、`message.part.delta`。
+- 验收标准（Given/When/Then）：
+  - Given shell 模式且输入非空，When 提交，Then 调用 `session.shell` 并清空输入。
+  - Given shell 请求失败，When catch，Then 显示错误提示并恢复输入。
+- 证据：`/Users/zy/Code/opencode/opencode/packages/app/src/components/prompt-input/submit.ts:228`, `:230`, `:240`
+- 文档差异备注：本轮基于 `packages/app` 补齐。
+
+### REQ-APP-036
+- 需求名称：Slash 自定义命令提交
+- 优先级：P1
+- 需求内容：用户以 `/` 开头输入已注册命令时，前端调用会话 command 接口并传递参数。
+- 触发入口：Prompt 输入区 slash 提交（命令命中）
+- 前置条件：存在 sessionID；命令名在 `sync.data.command` 中可匹配。
+- 主成功流程：识别 `/command` -> 清空输入 -> 调用 `session.command`（含 args/model/variant/附件 parts）。
+- 异常与降级行为：请求失败 toast，并恢复输入内容。
+- 边界范围（In/Out）：In=自定义命令投递；Out=命令注册与执行后端实现。
+- REST依赖（核心/辅助）：核心 `POST /session/{sessionID}/command`；辅助 `GET /command`。
+- SSE依赖（事件+用途）：补偿 `session.status`、`message.updated`、`message.part.updated`、`message.part.delta`。
+- 验收标准（Given/When/Then）：
+  - Given 输入 `/` 命令且命中本地命令列表，When 提交，Then 调用 `session.command` 且携带参数。
+  - Given command 请求失败，When catch，Then 显示错误提示并恢复输入。
+- 证据：`/Users/zy/Code/opencode/opencode/packages/app/src/components/prompt-input/submit.ts:248`, `:261`, `:277`; `/Users/zy/Code/opencode/opencode/packages/app/src/context/global-sync/bootstrap.ts:153`
+- 文档差异备注：本轮基于 `packages/app` 补齐。
 
 ### REQ-APP-015
 - 需求名称：浏览文件树并读取文件内容
@@ -609,6 +643,8 @@
 | P1 | REQ-APP-008 | 重做到后续节点（unrevert/revert） | `POST /session/{sessionID}/unrevert`, `POST /session/{sessionID}/revert` | - |
 | P1 | REQ-APP-009 | 会话总结压缩（summarize） | `POST /session/{sessionID}/summarize` | - |
 | P1 | REQ-APP-010 | 从历史消息分叉会话（fork） | `POST /session/{sessionID}/fork` | - |
+| P1 | REQ-APP-035 | Shell 模式提交并执行命令 | `POST /session/{sessionID}/shell` | - |
+| P1 | REQ-APP-036 | Slash 自定义命令提交 | `POST /session/{sessionID}/command` | `GET /command` |
 | P1 | REQ-APP-015 | 浏览文件树并读取文件内容 | `GET /file`, `GET /file/content` | - |
 | P1 | REQ-APP-016 | 文件/目录检索 | `GET /find/file` | - |
 | P1 | REQ-APP-017 | 文件变更后自动刷新视图 | `GET /file/content`, `GET /file` | - |
@@ -648,6 +684,8 @@
 | P1 | REQ-APP-008 | 重做到后续节点（unrevert/revert） | `session.updated` | - |
 | P1 | REQ-APP-009 | 会话总结压缩（summarize） | - | `session.updated` |
 | P1 | REQ-APP-010 | 从历史消息分叉会话（fork） | - | `session.created` |
+| P1 | REQ-APP-035 | Shell 模式提交并执行命令 | - | `session.status`, `message.updated`, `message.part.updated`, `message.part.delta` |
+| P1 | REQ-APP-036 | Slash 自定义命令提交 | - | `session.status`, `message.updated`, `message.part.updated`, `message.part.delta` |
 | P1 | REQ-APP-015 | 浏览文件树并读取文件内容 | - | `file.watcher.updated` |
 | P1 | REQ-APP-016 | 文件/目录检索 | - | - |
 | P1 | REQ-APP-017 | 文件变更后自动刷新视图 | `file.watcher.updated` | - |
@@ -705,7 +743,7 @@
   - `/Users/zy/Code/opencode/opencode/packages/app/src/pages/session/use-session-commands.tsx:275`
 - 权限/问题：
   - `/Users/zy/Code/opencode/opencode/packages/app/src/context/permission.tsx:117`
-  - `/Users/zy/Code/opencode/opencode/packages/app/src/components/question-dock.tsx:41`
+  - `/Users/zy/Code/opencode/opencode/packages/app/src/pages/session/composer/session-question-dock.tsx:135`
 - 文件/LSP：
   - `/Users/zy/Code/opencode/opencode/packages/app/src/context/file.tsx:67`
   - `/Users/zy/Code/opencode/opencode/packages/app/src/context/file/watcher.ts:18`
