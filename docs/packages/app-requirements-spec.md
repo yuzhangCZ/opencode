@@ -40,7 +40,7 @@
 - 异常与降级行为：请求失败回滚乐观消息、恢复输入与上下文、toast 报错。
 - 边界范围（In/Out）：In=普通 prompt；Out=shell 命令模式。
 - REST依赖（核心/辅助）：核心 `POST /session/{sessionID}/prompt_async`；辅助 `POST /session/{sessionID}/abort`（冲突中断）。
-- SSE依赖（事件+用途）：驱动 `message.updated`、`message.part.updated`、`session.status`；补偿 `session.error`。
+- SSE依赖（事件+用途）：驱动 `message.updated`、`message.part.updated`、`message.part.delta`、`session.status`；补偿 `session.error`。
 - 验收标准（Given/When/Then）：
   - Given 会话页可输入，When 提交 Prompt，Then 立即出现用户乐观消息且状态变 busy。
   - Given prompt 请求失败，When 返回错误，Then 乐观消息被移除并恢复输入内容。
@@ -53,11 +53,11 @@
 - 需求内容：模型输出按 part 增量到达，UI 增量更新，不重复插入。
 - 触发入口：Prompt 提交后消息区自动更新
 - 前置条件：已建立全局 SSE 订阅。
-- 主成功流程：`/global/event` 收到 `message.part.updated` -> reducer 按 part.id 二分更新/插入。
+- 主成功流程：`/global/event` 收到 `message.part.updated` / `message.part.delta` -> reducer 按 part.id 更新或增量拼接。
 - 异常与降级行为：part 删除事件到达时移除并清空空列表。
 - 边界范围（In/Out）：In=part 增删；Out=消息全文重算。
 - REST依赖（核心/辅助）：核心 `POST /session/{sessionID}/prompt_async`（触发流）；辅助无。
-- SSE依赖（事件+用途）：驱动 `message.part.updated`；补偿 `message.part.removed`。
+- SSE依赖（事件+用途）：驱动 `message.part.updated`、`message.part.delta`；补偿 `message.part.removed`。
 - 验收标准（Given/When/Then）：
   - Given 消息已有 part，When 收到同 id 的 `message.part.updated`，Then 原位更新而非重复追加。
   - Given 收到 `message.part.removed` 且该消息 part 清空，Then store 中该消息 part 键被清理。
@@ -91,7 +91,7 @@
 - 异常与降级行为：拉取失败时 loading 结束并保持现有消息。
 - 边界范围（In/Out）：In=分页拉取；Out=服务端游标策略。
 - REST依赖（核心/辅助）：核心 `GET /session/{sessionID}/message`；辅助 `GET /session/{sessionID}`。
-- SSE依赖（事件+用途）：补偿 `message.updated` / `message.part.updated`（分页间隔中的增量同步）。
+- SSE依赖（事件+用途）：补偿 `message.updated` / `message.part.updated` / `message.part.delta`（分页间隔中的增量同步）。
 - 验收标准（Given/When/Then）：
   - Given 会话首次打开，When `sync.session.sync` 执行，Then 消息和 parts 被按 id 排序写入。
   - Given 存在更多历史，When 点击 load earlier，Then 请求以更大 limit 重拉且列表扩展。
@@ -345,7 +345,7 @@
 - 主成功流程：先更新本地 store，再调用 `pty.update` 提交 title/size。
 - 异常与降级行为：后端失败仅日志，不回滚本地立即体验。
 - 边界范围（In/Out）：In=title/rows/cols；Out=终端渲染缓存策略。
-- REST依赖（核心/辅助）：核心 `POST /pty/{ptyID}`。
+- REST依赖（核心/辅助）：核心 `PUT /pty/{ptyID}`。
 - SSE依赖（事件+用途）：无（仅 REST 推送）。
 - 验收标准（Given/When/Then）：
   - Given 用户调整终端尺寸，When update 调用，Then 请求包含 rows/cols。
@@ -447,7 +447,7 @@
 - 主成功流程：list sessions -> worktree.reset -> 批量 session.update(archived) -> instance.dispose。
 - 异常与降级行为：reset 失败即停止后续归档与 dispose。
 - 边界范围（In/Out）：In=重置 + 归档 + dispose；Out=会话物理删除。
-- REST依赖（核心/辅助）：核心 `POST /experimental/worktree/reset`；辅助 `GET /session`、`POST /session/{sessionID}`、`POST /instance/dispose`。
+- REST依赖（核心/辅助）：核心 `POST /experimental/worktree/reset`；辅助 `GET /session`、`PATCH /session/{sessionID}`、`POST /instance/dispose`。
 - SSE依赖（事件+用途）：无（仅 REST 串联）。
 - 验收标准（Given/When/Then）：
   - Given reset 成功，When 后续流程执行，Then 活跃会话被归档且实例被 dispose。
@@ -464,7 +464,7 @@
 - 主成功流程：`auth.set` 存储 key；断开时 `auth.remove`，必要时 `global.dispose`。
 - 异常与降级行为：表单校验空值；请求失败 toast。
 - 边界范围（In/Out）：In=连接/断开；Out=key 加密存储实现。
-- REST依赖（核心/辅助）：核心 `POST /auth/{providerID}`、`DELETE /auth/{providerID}`；辅助 `POST /global/dispose`。
+- REST依赖（核心/辅助）：核心 `PUT /auth/{providerID}`、`DELETE /auth/{providerID}`；辅助 `POST /global/dispose`。
 - SSE依赖（事件+用途）：补偿 `global.disposed`（触发刷新）。
 - 验收标准（Given/When/Then）：
   - Given 输入有效 API Key，When 提交，Then 调用 auth.set 并显示连接成功提示。
@@ -583,7 +583,7 @@
 - 主成功流程：archive 用 session.update(archived)；delete 用 session.delete；完成后选择父会话/邻近会话/会话列表路由。
 - 异常与降级行为：失败 toast，保留当前会话。
 - 边界范围（In/Out）：In=导航与 store 收敛；Out=后端数据保留策略。
-- REST依赖（核心/辅助）：核心 `POST /session/{sessionID}`、`DELETE /session/{sessionID}`。
+- REST依赖（核心/辅助）：核心 `PATCH /session/{sessionID}`、`DELETE /session/{sessionID}`。
 - SSE依赖（事件+用途）：补偿 `session.updated`、`session.deleted`（跨视图收敛）。
 - 验收标准（Given/When/Then）：
   - Given 当前会话归档成功，When 当前页即该会话，Then 自动跳转到父会话或邻近会话或会话列表。
@@ -614,31 +614,31 @@
 | P1 | REQ-APP-017 | 文件变更后自动刷新视图 | `GET /file/content`, `GET /file` | - |
 | P1 | REQ-APP-018 | LSP 状态变更后状态刷新 | `GET /lsp` | - |
 | P1 | REQ-APP-019 | 创建/切换/关闭终端 | `POST /pty`, `DELETE /pty/{ptyID}` | `GET /pty` |
-| P1 | REQ-APP-020 | 终端尺寸与标题更新 | `POST /pty/{ptyID}` | - |
+| P1 | REQ-APP-020 | 终端尺寸与标题更新 | `PUT /pty/{ptyID}` | - |
 | P1 | REQ-APP-021 | 终端退出后 UI 一致性 | - | - |
 | P1 | REQ-APP-022 | 创建工作区（worktree create） | `POST /experimental/worktree` | - |
 | P1 | REQ-APP-025 | 加载 provider 与认证方式 | `GET /provider`, `GET /provider/auth` | `GET /global/config` |
 | P1 | REQ-APP-026 | Provider OAuth 授权与回调 | `POST /provider/{providerID}/oauth/authorize`, `POST /provider/{providerID}/oauth/callback` | `POST /global/dispose` |
 | P2 | REQ-APP-023 | 删除工作区（worktree remove） | `DELETE /experimental/worktree` | - |
-| P2 | REQ-APP-024 | 重置工作区并归档会话（worktree reset + dispose） | `POST /experimental/worktree/reset` | `GET /session`, `POST /session/{sessionID}`, `POST /instance/dispose` |
-| P2 | REQ-APP-027 | Provider API Key 配置与移除 | `POST /auth/{providerID}`, `DELETE /auth/{providerID}` | `POST /global/dispose` |
+| P2 | REQ-APP-024 | 重置工作区并归档会话（worktree reset + dispose） | `POST /experimental/worktree/reset` | `GET /session`, `PATCH /session/{sessionID}`, `POST /instance/dispose` |
+| P2 | REQ-APP-027 | Provider API Key 配置与移除 | `PUT /auth/{providerID}`, `DELETE /auth/{providerID}` | `POST /global/dispose` |
 | P2 | REQ-APP-028 | MCP 连接状态切换与回拉状态 | `POST /mcp/{name}/connect`, `POST /mcp/{name}/disconnect`, `GET /mcp` | - |
 | P2 | REQ-APP-029 | 回合完成通知（session.idle） | - | - |
 | P2 | REQ-APP-030 | 错误通知（session.error） | - | - |
 | P2 | REQ-APP-031 | 权限/问题到达提醒（toast/系统通知） | - | - |
 | P2 | REQ-APP-032 | 生成分享链接 | `POST /session/{sessionID}/share` | - |
 | P2 | REQ-APP-033 | 取消分享链接 | `DELETE /session/{sessionID}/share` | - |
-| P2 | REQ-APP-034 | 会话归档/删除后的导航与状态一致性 | `POST /session/{sessionID}`, `DELETE /session/{sessionID}` | - |
+| P2 | REQ-APP-034 | 会话归档/删除后的导航与状态一致性 | `PATCH /session/{sessionID}`, `DELETE /session/{sessionID}` | - |
 
 ## 4. 按需求映射 SSE 事件
 
 | 优先级 | 需求ID | 需求名称 | 驱动事件 | 补偿事件 |
 |---|---|---|---|---|
 | P0 | REQ-APP-001 | 新建并进入会话 | `session.created` | `session.updated` |
-| P0 | REQ-APP-002 | 会话中发送 Prompt 并看到响应 | `message.updated`, `message.part.updated`, `session.status` | `session.error` |
-| P0 | REQ-APP-003 | 消息流式增量展示（part 级） | `message.part.updated` | `message.part.removed` |
+| P0 | REQ-APP-002 | 会话中发送 Prompt 并看到响应 | `message.updated`, `message.part.updated`, `message.part.delta`, `session.status` | `session.error` |
+| P0 | REQ-APP-003 | 消息流式增量展示（part 级） | `message.part.updated`, `message.part.delta` | `message.part.removed` |
 | P0 | REQ-APP-004 | 会话状态可见（idle/busy/retry） | `session.status` | `session.idle` |
-| P0 | REQ-APP-005 | 加载历史消息与分页继续加载 | - | `message.updated`, `message.part.updated` |
+| P0 | REQ-APP-005 | 加载历史消息与分页继续加载 | - | `message.updated`, `message.part.updated`, `message.part.delta` |
 | P0 | REQ-APP-006 | 中止当前执行 | - | `session.status` |
 | P0 | REQ-APP-007 | 撤销到历史节点（revert） | `session.updated` | `message.removed` |
 | P0 | REQ-APP-011 | 接收并处理权限请求 | `permission.asked` | `permission.replied` |
@@ -672,22 +672,26 @@
 ## 5. SSE 实现机制简述（事件如何驱动 UI）
 
 - 订阅入口：`GlobalSDKProvider` 通过 `global.event()` 连接 `GET /global/event`，按 `directory` 分发到 `globalSync.child(directory)`。
-- 事件收敛：`global-sdk.tsx` 对 `session.status`、`lsp.updated`、`message.part.updated` 做 coalesce，避免高频重绘。
+- 事件收敛：`global-sdk.tsx` 对 `session.status`、`lsp.updated`、`message.part.updated` 做 coalesce，并在 `message.part.updated` 到达后跳过对应 `message.part.delta`，避免高频重绘与重复增量。
 - 状态写入：`applyDirectoryEvent` 根据事件类型写入 `session/message/part/permission/question/...` store。
 - UI驱动：页面组件主要消费 `useSync().data`；因此 SSE -> store 变更 -> 组件自动重渲染。
 - 通知链路：`notification.tsx` 独立监听 `session.idle/session.error`，构建通知索引并触发声音/系统通知。
 
 ## 6. 文档差异清单（按需求影响与优先级）
 
-> 结果：本次范围内，`packages/app` 实际依赖的 REST 接口在 `docs/api/01-rest-reference.md` 已覆盖（含此前补充项）。无新增缺失。
+> 结果：本次对齐发现 `app-requirements-spec` 与 `docs/api` 存在命名/方法漂移；已按 `docs/api` 更新文档映射并保留 REQ 编号不变。
 
-| 差异接口 | 01文档状态（缺失/命名不一致） | 影响需求ID | 最高优先级 | 建议补齐内容 | 证据 |
+| 差异接口/事件 | 01/02文档状态（缺失/命名不一致） | 影响需求ID | 最高优先级 | 建议补齐内容 | 证据 |
 |---|---|---|---|---|---|
-| - | 无新增差异 | - | - | 维持现状 | `/Users/zy/Code/opencode/opencode/docs/api/01-rest-reference.md:1` |
+| `PATCH /session/{sessionID}`（会话更新） | 01 文档会话更新方法为 `PATCH` | REQ-APP-024, REQ-APP-034 | P2 | 将需求文档中的会话更新语义统一到 `PATCH` | `/Users/zy/Code/opencode/opencode/docs/api/01-rest-reference.md:210` |
+| `PUT /pty/{ptyID}`（终端更新） | 01 文档 PTY 更新方法为 `PUT` | REQ-APP-020 | P1 | 将终端 update 映射统一到 `PUT` | `/Users/zy/Code/opencode/opencode/docs/api/01-rest-reference.md:809` |
+| `PUT /auth/{providerID}`（Provider Key 设置） | 01 文档 auth 设置方法为 `PUT` | REQ-APP-027 | P2 | 将 provider key 设置映射统一到 `PUT` | `/Users/zy/Code/opencode/opencode/docs/api/01-rest-reference.md:1480` |
+| `message.part.delta` | 02/SSE 文档已定义增量事件 | REQ-APP-002, REQ-APP-003, REQ-APP-005 | P0 | 在消息流需求映射中补齐 `message.part.delta` | `/Users/zy/Code/opencode/opencode/docs/api/02-sse-reference.md:84` |
 
 补充说明（SSE 文档组织）：
 - `docs/api/02-sse-reference.md` 主要定义 SSE 端点与协议；事件枚举与字段在 `docs/api/sse/*`。
 - 本文中事件映射均可在 `docs/api/sse/00-event-catalog.md` 对齐。
+- `workspace.ready/workspace.failed` 与 `worktree.ready/worktree.failed` 在 SSE 文档中均有定义；`packages/app` 当前消费与映射保持 `worktree.*`。
 
 ## 7. 证据索引（关键文件）
 
