@@ -14,6 +14,8 @@
    - [`03-implementation-map.md`](./03-implementation-map.md)
 5. 专题分析 / Incident Analysis Layer
    - [`04-plugin-client-event-analysis.md`](./04-plugin-client-event-analysis.md)
+   - [`05-plugin-loading-versioning.md`](./05-plugin-loading-versioning.md)
+   - [`06-context-model.md`](./06-context-model.md)
 6. 接口层 / REST API Layer
    - [`../api/01-rest-reference.md`](../api/01-rest-reference.md)
 7. 事件层 / SSE API Layer

@@ -13,8 +13,11 @@
    - [docs/api/01-rest-reference.md](./api/01-rest-reference.md)
 4. SSE 事件参考（SSE API）
    - [docs/api/02-sse-reference.md](./api/02-sse-reference.md)
+5. Plugin SDK 参考（Plugin SDK API）
+   - [docs/api/03-plugin-sdk-reference.md](./api/03-plugin-sdk-reference.md)
 
 ## 推荐路径 / Suggested Paths
 
 1. 系统视角：`architecture/index.md` -> `01/02/03` -> API 文档。
 2. 包视角：`packages/index.md` -> 任意 package 架构页 -> 回跳到系统层。
+3. 插件作者视角：`api/03-plugin-sdk-reference.md` -> `plugin-sdk/01/02/03/05/08`。

@@ -5,6 +5,11 @@
 - Runtime Observed Version: `v1.2.15`
 - Version Note Default: 未单独标注字段默认 `since v1.2.0`（以本文件 Contract Baseline 为准）
 
+相关文档：
+
+- [01-rest-reference.md](./01-rest-reference.md)
+- [03-plugin-sdk-reference.md](./03-plugin-sdk-reference.md)
+
 
 ## 1. 概览
 

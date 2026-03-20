@@ -28,6 +28,7 @@
 
 ## Relations
 - 被 `app`、`plugin`、`slack`、外部集成广泛依赖。
+- 插件侧接口参考见 `docs/api/03-plugin-sdk-reference.md` 与 `docs/api/plugin-sdk/*`。
 
 ## Evidence
 1. `packages/sdk/openapi.json`

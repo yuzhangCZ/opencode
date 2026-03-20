@@ -26,6 +26,7 @@
 
 ## Relations
 - 上游被 `opencode/src/plugin/index.ts` 消费。
+- 接口参考见 `docs/api/03-plugin-sdk-reference.md` 与 `docs/api/plugin-sdk/*`。
 
 ## Evidence
 1. `packages/plugin/package.json`
