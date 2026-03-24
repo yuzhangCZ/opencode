@@ -394,6 +394,7 @@
 ## 共享类型：`Session`
 
 `session.created`、`session.updated`、`session.deleted` 的 `properties.info` 都使用同一个 `Session` 结构。
+在这些事件中，`Session` 字段对应访问路径为 `properties.info.<field>`。
 
 ### 消费建议
 
@@ -405,25 +406,25 @@
 
 | 字段 | 类型 | 必填性 | 说明 |
 | --- | --- | --- | --- |
-| `properties.info.id` | `string` | 必填 | 会话 ID |
-| `properties.info.projectID` | `string` | 必填 | 所属项目 ID |
-| `properties.info.directory` | `string` | 必填 | 会话工作目录 |
-| `properties.info.parentID` | `string` | 可选 | 父会话 ID |
-| `properties.info.summary` | `SessionSummary` | 可选 | 会话摘要对象 |
-| `properties.info.share` | `SessionShare` | 可选 | 会话分享信息 |
-| `properties.info.title` | `string` | 必填 | 会话标题 |
-| `properties.info.version` | `string` | 必填 | 会话版本标识 |
-| `properties.info.time` | `SessionTime` | 必填 | 会话时间对象 |
-| `properties.info.revert` | `SessionRevert` | 可选 | 最近一次回滚相关信息 |
+| `id` | `string` | 必填 | 会话 ID |
+| `projectID` | `string` | 必填 | 所属项目 ID |
+| `directory` | `string` | 必填 | 会话工作目录 |
+| `parentID` | `string` | 可选 | 父会话 ID |
+| `summary` | `SessionSummary` | 可选 | 会话摘要对象 |
+| `share` | `SessionShare` | 可选 | 会话分享信息 |
+| `title` | `string` | 必填 | 会话标题 |
+| `version` | `string` | 必填 | 会话版本标识 |
+| `time` | `SessionTime` | 必填 | 会话时间对象 |
+| `revert` | `SessionRevert` | 可选 | 最近一次回滚相关信息 |
 
 ### 复合字段说明
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
-| `properties.info.summary` | `SessionSummary` | 变更统计与可选 `FileDiff[]` 列表 |
-| `properties.info.share` | `SessionShare` | 外部分享链接 |
-| `properties.info.time` | `SessionTime` | 创建、更新时间与可选压缩时间 |
-| `properties.info.revert` | `SessionRevert` | 回滚入口关联的消息、part、快照与 diff |
+| `summary` | `SessionSummary` | 变更统计与可选 `FileDiff[]` 列表 |
+| `share` | `SessionShare` | 外部分享链接 |
+| `time` | `SessionTime` | 创建、更新时间与可选压缩时间 |
+| `revert` | `SessionRevert` | 回滚入口关联的消息、part、快照与 diff |
 
 ## `session.diff`
 

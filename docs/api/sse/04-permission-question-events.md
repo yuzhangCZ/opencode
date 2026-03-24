@@ -35,15 +35,17 @@
 
 ### 字段说明（`PermissionRequest`）
 
+在 `permission.asked` 事件中，这些字段对应访问路径为 `properties.<field>`。
+
 | 字段 | 类型 | 必填性 | 说明 |
 | --- | --- | --- | --- |
-| `properties.id` | `string` | 必填 | 权限请求 ID |
-| `properties.sessionID` | `string` | 必填 | 会话 ID |
-| `properties.permission` | `string` | 必填 | 权限类型 |
-| `properties.patterns` | `string[]` | 必填 | 本次请求涉及的匹配范围 |
-| `properties.metadata` | `Record<string, unknown>` | 必填 | 附加上下文元数据 |
-| `properties.always` | `string[]` | 必填 | 用户选择“总是允许”时持久化的范围 |
-| `properties.tool` | `RequestToolRef` | 可选 | 关联工具调用引用 |
+| `id` | `string` | 必填 | 权限请求 ID |
+| `sessionID` | `string` | 必填 | 会话 ID |
+| `permission` | `string` | 必填 | 权限类型 |
+| `patterns` | `string[]` | 必填 | 本次请求涉及的匹配范围 |
+| `metadata` | `Record<string, unknown>` | 必填 | 附加上下文元数据 |
+| `always` | `string[]` | 必填 | 用户选择“总是允许”时持久化的范围 |
+| `tool` | `RequestToolRef` | 可选 | 关联工具调用引用 |
 
 ### 全字段示例
 
@@ -143,12 +145,14 @@
 
 ### 字段说明（`QuestionRequest`）
 
+在 `question.asked` 事件中，这些字段对应访问路径为 `properties.<field>`。
+
 | 字段 | 类型 | 必填性 | 说明 |
 | --- | --- | --- | --- |
-| `properties.id` | `string` | 必填 | 提问请求 ID |
-| `properties.sessionID` | `string` | 必填 | 会话 ID |
-| `properties.questions` | `QuestionInfo[]` | 必填 | 待回答问题列表 |
-| `properties.tool` | `RequestToolRef` | 可选 | 关联工具调用引用 |
+| `id` | `string` | 必填 | 提问请求 ID |
+| `sessionID` | `string` | 必填 | 会话 ID |
+| `questions` | `QuestionInfo[]` | 必填 | 待回答问题列表 |
+| `tool` | `RequestToolRef` | 可选 | 关联工具调用引用 |
 
 ### 全字段示例
 
