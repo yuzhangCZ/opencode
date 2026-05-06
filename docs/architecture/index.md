@@ -16,6 +16,7 @@
    - [`04-plugin-client-event-analysis.md`](./04-plugin-client-event-analysis.md)
    - [`05-plugin-loading-versioning.md`](./05-plugin-loading-versioning.md)
    - [`06-context-model.md`](./06-context-model.md)
+   - [`07-command.md`](./07-command.md)
 6. 接口层 / REST API Layer
    - [`../api/01-rest-reference.md`](../api/01-rest-reference.md)
 7. 事件层 / SSE API Layer
